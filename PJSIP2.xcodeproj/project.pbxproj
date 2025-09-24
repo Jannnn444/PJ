@@ -1,0 +1,589 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1EDF00052E829AA800C35620 /* PJSIP2App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDF00042E829AA800C35620 /* PJSIP2App.swift */; };
+		1EDF00072E829AA800C35620 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDF00062E829AA800C35620 /* ContentView.swift */; };
+		1EDF00092E829AAB00C35620 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1EDF00082E829AAB00C35620 /* Assets.xcassets */; };
+		1EDF000C2E829AAB00C35620 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1EDF000B2E829AAB00C35620 /* Preview Assets.xcassets */; };
+		1EDF00152E829DE000C35620 /* user.mak in Sources */ = {isa = PBXBuildFile; fileRef = 1EDF00142E829DE000C35620 /* user.mak */; };
+		1EDF002D2E8393C700C35620 /* libpjnath-arm64-apple-darwin_ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDF002C2E82B1D800C35620 /* libpjnath-arm64-apple-darwin_ios.a */; };
+		1EDF002E2E8393C700C35620 /* libpjsdp-arm64-apple-darwin_ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDF00222E82B1D800C35620 /* libpjsdp-arm64-apple-darwin_ios.a */; };
+		1EDF002F2E8393C700C35620 /* libpjmedia-arm64-apple-darwin_ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDF00202E82B1D800C35620 /* libpjmedia-arm64-apple-darwin_ios.a */; };
+		1EDF00302E8393C700C35620 /* libpjmedia-codec-arm64-apple-darwin_ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDF00262E82B1D800C35620 /* libpjmedia-codec-arm64-apple-darwin_ios.a */; };
+		1EDF00312E8393C700C35620 /* libpjmedia-videodev-arm64-apple-darwin_ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDF00282E82B1D800C35620 /* libpjmedia-videodev-arm64-apple-darwin_ios.a */; };
+		1EDF00322E8393C700C35620 /* libpjmedia-audiodev-arm64-apple-darwin_ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDF002A2E82B1D800C35620 /* libpjmedia-audiodev-arm64-apple-darwin_ios.a */; };
+		1EDF00332E8393C700C35620 /* libpj-arm64-apple-darwin_ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDF00252E82B1D800C35620 /* libpj-arm64-apple-darwin_ios.a */; };
+		1EDF00342E8393C700C35620 /* libpjlib-util-arm64-apple-darwin_ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDF00242E82B1D800C35620 /* libpjlib-util-arm64-apple-darwin_ios.a */; };
+		1EDF003E2E8394CF00C35620 /* PJSIPTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDF003D2E8394CF00C35620 /* PJSIPTest.swift */; };
+		1EDF003F2E83973B00C35620 /* libpjsip-arm64-apple-darwin_ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDF00272E82B1D800C35620 /* libpjsip-arm64-apple-darwin_ios.a */; };
+		1EDF00402E83973B00C35620 /* libpjsip-simple-arm64-apple-darwin_ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDF00232E82B1D800C35620 /* libpjsip-simple-arm64-apple-darwin_ios.a */; };
+		1EDF00412E83973B00C35620 /* libpjsip-ua-arm64-apple-darwin_ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDF00212E82B1D800C35620 /* libpjsip-ua-arm64-apple-darwin_ios.a */; };
+		1EDF00422E83973B00C35620 /* libpjsua-arm64-apple-darwin_ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDF00292E82B1D800C35620 /* libpjsua-arm64-apple-darwin_ios.a */; };
+		1EDF00432E83973B00C35620 /* libpjsua2-arm64-apple-darwin_ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDF002B2E82B1D800C35620 /* libpjsua2-arm64-apple-darwin_ios.a */; };
+		1EDF004C2E83973B00C35620 /* libresample-arm64-apple-darwin_ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDF00442E83973B00C35620 /* libresample-arm64-apple-darwin_ios.a */; };
+		1EDF004D2E83973B00C35620 /* libsrtp-arm64-apple-darwin_ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDF00452E83973B00C35620 /* libsrtp-arm64-apple-darwin_ios.a */; };
+		1EDF004E2E83973B00C35620 /* libgsmcodec-arm64-apple-darwin_ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDF00462E83973B00C35620 /* libgsmcodec-arm64-apple-darwin_ios.a */; };
+		1EDF004F2E83973B00C35620 /* libwebrtc-arm64-apple-darwin_ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDF00472E83973B00C35620 /* libwebrtc-arm64-apple-darwin_ios.a */; };
+		1EDF00502E83973B00C35620 /* libg7221codec-arm64-apple-darwin_ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDF00482E83973B00C35620 /* libg7221codec-arm64-apple-darwin_ios.a */; };
+		1EDF00512E83973B00C35620 /* libyuv-arm64-apple-darwin_ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDF00492E83973B00C35620 /* libyuv-arm64-apple-darwin_ios.a */; };
+		1EDF00522E83973B00C35620 /* libilbccodec-arm64-apple-darwin_ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDF004A2E83973B00C35620 /* libilbccodec-arm64-apple-darwin_ios.a */; };
+		1EDF00532E83973B00C35620 /* libspeex-arm64-apple-darwin_ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDF004B2E83973B00C35620 /* libspeex-arm64-apple-darwin_ios.a */; };
+		1EDF00542E83975D00C35620 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDF00372E8393FE00C35620 /* AudioToolbox.framework */; };
+		1EDF00572E83975E00C35620 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDF00392E83940500C35620 /* AVFoundation.framework */; };
+		1EDF00592E83976100C35620 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDF003B2E83940F00C35620 /* CFNetwork.framework */; };
+		1EDF005B2E83976300C35620 /* Network.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDF00172E82A44200C35620 /* Network.framework */; };
+		1EDF005D2E83976400C35620 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDF00192E82A44800C35620 /* Security.framework */; };
+		1EDF005F2E83976500C35620 /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDF001B2E82A45100C35620 /* VideoToolbox.framework */; };
+		1EDF00632E8398A900C35620 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDF00612E8398A400C35620 /* CoreMedia.framework */; };
+		1EDF00672E8398B600C35620 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDF00652E8398B300C35620 /* MetalKit.framework */; };
+		1EDF006F2E8398DB00C35620 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDF006D2E8398D900C35620 /* Metal.framework */; };
+		1EDF00712E8398E000C35620 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDF006B2E8398D200C35620 /* QuartzCore.framework */; };
+		1EDF00732E8398E300C35620 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDF00692E8398C800C35620 /* CoreVideo.framework */; };
+		1EDF007B2E8399C600C35620 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDF00792E8399BF00C35620 /* CoreFoundation.framework */; };
+		1EDF007D2E8399C700C35620 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDF00752E8399AA00C35620 /* Foundation.framework */; };
+		1EDF007F2E8399CA00C35620 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDF00772E8399B000C35620 /* UIKit.framework */; };
+		1EDF00822E839ACB00C35620 /* PJSIPManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDF00812E839ACB00C35620 /* PJSIPManager.swift */; };
+		1EDF00842E83C28500C35620 /* SIPPhoneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDF00832E83C28500C35620 /* SIPPhoneView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		1EDF00012E829AA800C35620 /* PJSIP2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PJSIP2.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1EDF00042E829AA800C35620 /* PJSIP2App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PJSIP2App.swift; sourceTree = "<group>"; };
+		1EDF00062E829AA800C35620 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		1EDF00082E829AAB00C35620 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		1EDF000B2E829AAB00C35620 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		1EDF00132E829D9300C35620 /* config_site.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = config_site.h; sourceTree = "<group>"; };
+		1EDF00142E829DE000C35620 /* user.mak */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = user.mak; sourceTree = "<group>"; };
+		1EDF00172E82A44200C35620 /* Network.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Network.framework; path = System/Library/Frameworks/Network.framework; sourceTree = SDKROOT; };
+		1EDF00192E82A44800C35620 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		1EDF001B2E82A45100C35620 /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
+		1EDF001D2E82A4A500C35620 /* PJSIP2-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PJSIP2-Bridging-Header.h"; sourceTree = "<group>"; };
+		1EDF00202E82B1D800C35620 /* libpjmedia-arm64-apple-darwin_ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libpjmedia-arm64-apple-darwin_ios.a"; path = "pjproject-2.15.1/pjmedia/lib/libpjmedia-arm64-apple-darwin_ios.a"; sourceTree = "<group>"; };
+		1EDF00212E82B1D800C35620 /* libpjsip-ua-arm64-apple-darwin_ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libpjsip-ua-arm64-apple-darwin_ios.a"; path = "pjproject-2.15.1/pjsip/lib/libpjsip-ua-arm64-apple-darwin_ios.a"; sourceTree = "<group>"; };
+		1EDF00222E82B1D800C35620 /* libpjsdp-arm64-apple-darwin_ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libpjsdp-arm64-apple-darwin_ios.a"; path = "pjproject-2.15.1/pjmedia/lib/libpjsdp-arm64-apple-darwin_ios.a"; sourceTree = "<group>"; };
+		1EDF00232E82B1D800C35620 /* libpjsip-simple-arm64-apple-darwin_ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libpjsip-simple-arm64-apple-darwin_ios.a"; path = "pjproject-2.15.1/pjsip/lib/libpjsip-simple-arm64-apple-darwin_ios.a"; sourceTree = "<group>"; };
+		1EDF00242E82B1D800C35620 /* libpjlib-util-arm64-apple-darwin_ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libpjlib-util-arm64-apple-darwin_ios.a"; path = "pjproject-2.15.1/pjlib-util/lib/libpjlib-util-arm64-apple-darwin_ios.a"; sourceTree = "<group>"; };
+		1EDF00252E82B1D800C35620 /* libpj-arm64-apple-darwin_ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libpj-arm64-apple-darwin_ios.a"; path = "pjproject-2.15.1/pjlib/lib/libpj-arm64-apple-darwin_ios.a"; sourceTree = "<group>"; };
+		1EDF00262E82B1D800C35620 /* libpjmedia-codec-arm64-apple-darwin_ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libpjmedia-codec-arm64-apple-darwin_ios.a"; path = "pjproject-2.15.1/pjmedia/lib/libpjmedia-codec-arm64-apple-darwin_ios.a"; sourceTree = "<group>"; };
+		1EDF00272E82B1D800C35620 /* libpjsip-arm64-apple-darwin_ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libpjsip-arm64-apple-darwin_ios.a"; path = "pjproject-2.15.1/pjsip/lib/libpjsip-arm64-apple-darwin_ios.a"; sourceTree = "<group>"; };
+		1EDF00282E82B1D800C35620 /* libpjmedia-videodev-arm64-apple-darwin_ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libpjmedia-videodev-arm64-apple-darwin_ios.a"; path = "pjproject-2.15.1/pjmedia/lib/libpjmedia-videodev-arm64-apple-darwin_ios.a"; sourceTree = "<group>"; };
+		1EDF00292E82B1D800C35620 /* libpjsua-arm64-apple-darwin_ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libpjsua-arm64-apple-darwin_ios.a"; path = "pjproject-2.15.1/pjsip/lib/libpjsua-arm64-apple-darwin_ios.a"; sourceTree = "<group>"; };
+		1EDF002A2E82B1D800C35620 /* libpjmedia-audiodev-arm64-apple-darwin_ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libpjmedia-audiodev-arm64-apple-darwin_ios.a"; path = "pjproject-2.15.1/pjmedia/lib/libpjmedia-audiodev-arm64-apple-darwin_ios.a"; sourceTree = "<group>"; };
+		1EDF002B2E82B1D800C35620 /* libpjsua2-arm64-apple-darwin_ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libpjsua2-arm64-apple-darwin_ios.a"; path = "pjproject-2.15.1/pjsip/lib/libpjsua2-arm64-apple-darwin_ios.a"; sourceTree = "<group>"; };
+		1EDF002C2E82B1D800C35620 /* libpjnath-arm64-apple-darwin_ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libpjnath-arm64-apple-darwin_ios.a"; path = "pjproject-2.15.1/pjnath/lib/libpjnath-arm64-apple-darwin_ios.a"; sourceTree = "<group>"; };
+		1EDF00352E8393C700C35620 /* src */ = {isa = PBXFileReference; lastKnownFileType = folder; name = src; path = "pjproject-2.15.1/pjsip-apps/src"; sourceTree = "<group>"; };
+		1EDF00372E8393FE00C35620 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		1EDF00392E83940500C35620 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		1EDF003B2E83940F00C35620 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		1EDF003D2E8394CF00C35620 /* PJSIPTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PJSIPTest.swift; sourceTree = "<group>"; };
+		1EDF00442E83973B00C35620 /* libresample-arm64-apple-darwin_ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libresample-arm64-apple-darwin_ios.a"; path = "pjproject-2.15.1/third_party/lib/libresample-arm64-apple-darwin_ios.a"; sourceTree = "<group>"; };
+		1EDF00452E83973B00C35620 /* libsrtp-arm64-apple-darwin_ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libsrtp-arm64-apple-darwin_ios.a"; path = "pjproject-2.15.1/third_party/lib/libsrtp-arm64-apple-darwin_ios.a"; sourceTree = "<group>"; };
+		1EDF00462E83973B00C35620 /* libgsmcodec-arm64-apple-darwin_ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libgsmcodec-arm64-apple-darwin_ios.a"; path = "pjproject-2.15.1/third_party/lib/libgsmcodec-arm64-apple-darwin_ios.a"; sourceTree = "<group>"; };
+		1EDF00472E83973B00C35620 /* libwebrtc-arm64-apple-darwin_ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libwebrtc-arm64-apple-darwin_ios.a"; path = "pjproject-2.15.1/third_party/lib/libwebrtc-arm64-apple-darwin_ios.a"; sourceTree = "<group>"; };
+		1EDF00482E83973B00C35620 /* libg7221codec-arm64-apple-darwin_ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libg7221codec-arm64-apple-darwin_ios.a"; path = "pjproject-2.15.1/third_party/lib/libg7221codec-arm64-apple-darwin_ios.a"; sourceTree = "<group>"; };
+		1EDF00492E83973B00C35620 /* libyuv-arm64-apple-darwin_ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libyuv-arm64-apple-darwin_ios.a"; path = "pjproject-2.15.1/third_party/lib/libyuv-arm64-apple-darwin_ios.a"; sourceTree = "<group>"; };
+		1EDF004A2E83973B00C35620 /* libilbccodec-arm64-apple-darwin_ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libilbccodec-arm64-apple-darwin_ios.a"; path = "pjproject-2.15.1/third_party/lib/libilbccodec-arm64-apple-darwin_ios.a"; sourceTree = "<group>"; };
+		1EDF004B2E83973B00C35620 /* libspeex-arm64-apple-darwin_ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libspeex-arm64-apple-darwin_ios.a"; path = "pjproject-2.15.1/third_party/lib/libspeex-arm64-apple-darwin_ios.a"; sourceTree = "<group>"; };
+		1EDF00612E8398A400C35620 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		1EDF00652E8398B300C35620 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
+		1EDF00692E8398C800C35620 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		1EDF006B2E8398D200C35620 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		1EDF006D2E8398D900C35620 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
+		1EDF00752E8399AA00C35620 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		1EDF00772E8399B000C35620 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		1EDF00792E8399BF00C35620 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		1EDF00812E839ACB00C35620 /* PJSIPManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PJSIPManager.swift; sourceTree = "<group>"; };
+		1EDF00832E83C28500C35620 /* SIPPhoneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SIPPhoneView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1EDFFFFE2E829AA800C35620 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1EDF00712E8398E000C35620 /* QuartzCore.framework in Frameworks */,
+				1EDF004C2E83973B00C35620 /* libresample-arm64-apple-darwin_ios.a in Frameworks */,
+				1EDF004D2E83973B00C35620 /* libsrtp-arm64-apple-darwin_ios.a in Frameworks */,
+				1EDF005B2E83976300C35620 /* Network.framework in Frameworks */,
+				1EDF007D2E8399C700C35620 /* Foundation.framework in Frameworks */,
+				1EDF004E2E83973B00C35620 /* libgsmcodec-arm64-apple-darwin_ios.a in Frameworks */,
+				1EDF004F2E83973B00C35620 /* libwebrtc-arm64-apple-darwin_ios.a in Frameworks */,
+				1EDF00502E83973B00C35620 /* libg7221codec-arm64-apple-darwin_ios.a in Frameworks */,
+				1EDF00512E83973B00C35620 /* libyuv-arm64-apple-darwin_ios.a in Frameworks */,
+				1EDF007B2E8399C600C35620 /* CoreFoundation.framework in Frameworks */,
+				1EDF00522E83973B00C35620 /* libilbccodec-arm64-apple-darwin_ios.a in Frameworks */,
+				1EDF00532E83973B00C35620 /* libspeex-arm64-apple-darwin_ios.a in Frameworks */,
+				1EDF00332E8393C700C35620 /* libpj-arm64-apple-darwin_ios.a in Frameworks */,
+				1EDF00342E8393C700C35620 /* libpjlib-util-arm64-apple-darwin_ios.a in Frameworks */,
+				1EDF005F2E83976500C35620 /* VideoToolbox.framework in Frameworks */,
+				1EDF002D2E8393C700C35620 /* libpjnath-arm64-apple-darwin_ios.a in Frameworks */,
+				1EDF00572E83975E00C35620 /* AVFoundation.framework in Frameworks */,
+				1EDF00732E8398E300C35620 /* CoreVideo.framework in Frameworks */,
+				1EDF00322E8393C700C35620 /* libpjmedia-audiodev-arm64-apple-darwin_ios.a in Frameworks */,
+				1EDF007F2E8399CA00C35620 /* UIKit.framework in Frameworks */,
+				1EDF002F2E8393C700C35620 /* libpjmedia-arm64-apple-darwin_ios.a in Frameworks */,
+				1EDF00312E8393C700C35620 /* libpjmedia-videodev-arm64-apple-darwin_ios.a in Frameworks */,
+				1EDF005D2E83976400C35620 /* Security.framework in Frameworks */,
+				1EDF00302E8393C700C35620 /* libpjmedia-codec-arm64-apple-darwin_ios.a in Frameworks */,
+				1EDF003F2E83973B00C35620 /* libpjsip-arm64-apple-darwin_ios.a in Frameworks */,
+				1EDF00632E8398A900C35620 /* CoreMedia.framework in Frameworks */,
+				1EDF00402E83973B00C35620 /* libpjsip-simple-arm64-apple-darwin_ios.a in Frameworks */,
+				1EDF00592E83976100C35620 /* CFNetwork.framework in Frameworks */,
+				1EDF00412E83973B00C35620 /* libpjsip-ua-arm64-apple-darwin_ios.a in Frameworks */,
+				1EDF00422E83973B00C35620 /* libpjsua-arm64-apple-darwin_ios.a in Frameworks */,
+				1EDF00432E83973B00C35620 /* libpjsua2-arm64-apple-darwin_ios.a in Frameworks */,
+				1EDF002E2E8393C700C35620 /* libpjsdp-arm64-apple-darwin_ios.a in Frameworks */,
+				1EDF00542E83975D00C35620 /* AudioToolbox.framework in Frameworks */,
+				1EDF00672E8398B600C35620 /* MetalKit.framework in Frameworks */,
+				1EDF006F2E8398DB00C35620 /* Metal.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1EDF00022E829AA800C35620 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1EDF00012E829AA800C35620 /* PJSIP2.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1EDF00032E829AA800C35620 /* PJSIP2 */ = {
+			isa = PBXGroup;
+			children = (
+				1EDF00122E829D6400C35620 /* pj */,
+				1EDF00042E829AA800C35620 /* PJSIP2App.swift */,
+				1EDF00062E829AA800C35620 /* ContentView.swift */,
+				1EDF00082E829AAB00C35620 /* Assets.xcassets */,
+				1EDF000A2E829AAB00C35620 /* Preview Content */,
+				1EDF001D2E82A4A500C35620 /* PJSIP2-Bridging-Header.h */,
+				1EDF003D2E8394CF00C35620 /* PJSIPTest.swift */,
+				1EDF00812E839ACB00C35620 /* PJSIPManager.swift */,
+				1EDF00832E83C28500C35620 /* SIPPhoneView.swift */,
+			);
+			path = PJSIP2;
+			sourceTree = "<group>";
+		};
+		1EDF000A2E829AAB00C35620 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				1EDF000B2E829AAB00C35620 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		1EDF00122E829D6400C35620 /* pj */ = {
+			isa = PBXGroup;
+			children = (
+				1EDF00132E829D9300C35620 /* config_site.h */,
+				1EDF00142E829DE000C35620 /* user.mak */,
+			);
+			path = pj;
+			sourceTree = "<group>";
+		};
+		1EDF00162E82A44200C35620 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1EDF00792E8399BF00C35620 /* CoreFoundation.framework */,
+				1EDF00772E8399B000C35620 /* UIKit.framework */,
+				1EDF00752E8399AA00C35620 /* Foundation.framework */,
+				1EDF006D2E8398D900C35620 /* Metal.framework */,
+				1EDF006B2E8398D200C35620 /* QuartzCore.framework */,
+				1EDF00692E8398C800C35620 /* CoreVideo.framework */,
+				1EDF00652E8398B300C35620 /* MetalKit.framework */,
+				1EDF00612E8398A400C35620 /* CoreMedia.framework */,
+				1EDF00482E83973B00C35620 /* libg7221codec-arm64-apple-darwin_ios.a */,
+				1EDF00462E83973B00C35620 /* libgsmcodec-arm64-apple-darwin_ios.a */,
+				1EDF004A2E83973B00C35620 /* libilbccodec-arm64-apple-darwin_ios.a */,
+				1EDF00442E83973B00C35620 /* libresample-arm64-apple-darwin_ios.a */,
+				1EDF004B2E83973B00C35620 /* libspeex-arm64-apple-darwin_ios.a */,
+				1EDF00452E83973B00C35620 /* libsrtp-arm64-apple-darwin_ios.a */,
+				1EDF00472E83973B00C35620 /* libwebrtc-arm64-apple-darwin_ios.a */,
+				1EDF00492E83973B00C35620 /* libyuv-arm64-apple-darwin_ios.a */,
+				1EDF003B2E83940F00C35620 /* CFNetwork.framework */,
+				1EDF00392E83940500C35620 /* AVFoundation.framework */,
+				1EDF00372E8393FE00C35620 /* AudioToolbox.framework */,
+				1EDF00352E8393C700C35620 /* src */,
+				1EDF00252E82B1D800C35620 /* libpj-arm64-apple-darwin_ios.a */,
+				1EDF00242E82B1D800C35620 /* libpjlib-util-arm64-apple-darwin_ios.a */,
+				1EDF00202E82B1D800C35620 /* libpjmedia-arm64-apple-darwin_ios.a */,
+				1EDF002A2E82B1D800C35620 /* libpjmedia-audiodev-arm64-apple-darwin_ios.a */,
+				1EDF00262E82B1D800C35620 /* libpjmedia-codec-arm64-apple-darwin_ios.a */,
+				1EDF00282E82B1D800C35620 /* libpjmedia-videodev-arm64-apple-darwin_ios.a */,
+				1EDF002C2E82B1D800C35620 /* libpjnath-arm64-apple-darwin_ios.a */,
+				1EDF00222E82B1D800C35620 /* libpjsdp-arm64-apple-darwin_ios.a */,
+				1EDF00272E82B1D800C35620 /* libpjsip-arm64-apple-darwin_ios.a */,
+				1EDF00232E82B1D800C35620 /* libpjsip-simple-arm64-apple-darwin_ios.a */,
+				1EDF00212E82B1D800C35620 /* libpjsip-ua-arm64-apple-darwin_ios.a */,
+				1EDF00292E82B1D800C35620 /* libpjsua-arm64-apple-darwin_ios.a */,
+				1EDF002B2E82B1D800C35620 /* libpjsua2-arm64-apple-darwin_ios.a */,
+				1EDF001B2E82A45100C35620 /* VideoToolbox.framework */,
+				1EDF00192E82A44800C35620 /* Security.framework */,
+				1EDF00172E82A44200C35620 /* Network.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		1EDFFFF82E829AA800C35620 = {
+			isa = PBXGroup;
+			children = (
+				1EDF00032E829AA800C35620 /* PJSIP2 */,
+				1EDF00022E829AA800C35620 /* Products */,
+				1EDF00162E82A44200C35620 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1EDF00002E829AA800C35620 /* PJSIP2 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1EDF000F2E829AAB00C35620 /* Build configuration list for PBXNativeTarget "PJSIP2" */;
+			buildPhases = (
+				1EDFFFFD2E829AA800C35620 /* Sources */,
+				1EDFFFFE2E829AA800C35620 /* Frameworks */,
+				1EDFFFFF2E829AA800C35620 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PJSIP2;
+			productName = PJSIP2;
+			productReference = 1EDF00012E829AA800C35620 /* PJSIP2.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1EDFFFF92E829AA800C35620 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1520;
+				LastUpgradeCheck = 1520;
+				TargetAttributes = {
+					1EDF00002E829AA800C35620 = {
+						CreatedOnToolsVersion = 15.2;
+						LastSwiftMigration = 1520;
+					};
+				};
+			};
+			buildConfigurationList = 1EDFFFFC2E829AA800C35620 /* Build configuration list for PBXProject "PJSIP2" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 1EDFFFF82E829AA800C35620;
+			productRefGroup = 1EDF00022E829AA800C35620 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1EDF00002E829AA800C35620 /* PJSIP2 */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1EDFFFFF2E829AA800C35620 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1EDF000C2E829AAB00C35620 /* Preview Assets.xcassets in Resources */,
+				1EDF00092E829AAB00C35620 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1EDFFFFD2E829AA800C35620 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1EDF00822E839ACB00C35620 /* PJSIPManager.swift in Sources */,
+				1EDF003E2E8394CF00C35620 /* PJSIPTest.swift in Sources */,
+				1EDF00842E83C28500C35620 /* SIPPhoneView.swift in Sources */,
+				1EDF00152E829DE000C35620 /* user.mak in Sources */,
+				1EDF00072E829AA800C35620 /* ContentView.swift in Sources */,
+				1EDF00052E829AA800C35620 /* PJSIP2App.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1EDF000D2E829AAB00C35620 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		1EDF000E2E829AAB00C35620 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		1EDF00102E829AAB00C35620 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PJSIP2/Preview Content\"";
+				DEVELOPMENT_TEAM = 362GN5DA84;
+				ENABLE_PREVIEWS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"PJ_AUTOCONF=1",
+					"PJ_IS_LITTLE_ENDIAN=1",
+					"PJ_IS_BIG_ENDIAN=0",
+					"PJ_CONFIG_IPHONE=1",
+					"PJ_M_ARM=1",
+					"PJMEDIA_HAS_VIDEO=1",
+					"PJ_HAS_SSL_SOCK=1",
+				);
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"./pjproject-2.15.1/pjlib/include/",
+					"./pjproject-2.15.1/pjlib-util/include/",
+					"./pjproject-2.15.1/pjnath/include/",
+					"./pjproject-2.15.1/pjmedia/include/",
+					"./pjproject-2.15.1/pjsip/include/",
+					"./pjproject-2.15.1/pjsua-lib/include/",
+				);
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/pjproject-2.15.1/pjnath/lib",
+					"$(PROJECT_DIR)/pjproject-2.15.1/pjmedia/lib",
+					"$(PROJECT_DIR)/pjproject-2.15.1/pjlib/lib",
+					"$(PROJECT_DIR)/pjproject-2.15.1/pjlib-util/lib",
+					"$(PROJECT_DIR)/pjproject-2.15.1/pjsip/lib",
+					"$(PROJECT_DIR)/pjproject-2.15.1/third_party/lib",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = "-Objc";
+				PRODUCT_BUNDLE_IDENTIFIER = com.jan.app.PJSIP2;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "PJSIP2/PJSIP2-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		1EDF00112E829AAB00C35620 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PJSIP2/Preview Content\"";
+				DEVELOPMENT_TEAM = 362GN5DA84;
+				ENABLE_PREVIEWS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"PJ_AUTOCONF=1",
+					"PJ_IS_LITTLE_ENDIAN=1",
+					"PJ_IS_BIG_ENDIAN=0",
+					"PJ_CONFIG_IPHONE=1",
+					"PJ_M_ARM=1",
+					"PJMEDIA_HAS_VIDEO=1",
+					"PJ_HAS_SSL_SOCK=1",
+				);
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"./pjproject-2.15.1/pjlib/include/",
+					"./pjproject-2.15.1/pjlib-util/include/",
+					"./pjproject-2.15.1/pjnath/include/",
+					"./pjproject-2.15.1/pjmedia/include/",
+					"./pjproject-2.15.1/pjsip/include/",
+					"./pjproject-2.15.1/pjsua-lib/include/",
+				);
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/pjproject-2.15.1/pjnath/lib",
+					"$(PROJECT_DIR)/pjproject-2.15.1/pjmedia/lib",
+					"$(PROJECT_DIR)/pjproject-2.15.1/pjlib/lib",
+					"$(PROJECT_DIR)/pjproject-2.15.1/pjlib-util/lib",
+					"$(PROJECT_DIR)/pjproject-2.15.1/pjsip/lib",
+					"$(PROJECT_DIR)/pjproject-2.15.1/third_party/lib",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = "-Objc";
+				PRODUCT_BUNDLE_IDENTIFIER = com.jan.app.PJSIP2;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "PJSIP2/PJSIP2-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1EDF000F2E829AAB00C35620 /* Build configuration list for PBXNativeTarget "PJSIP2" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1EDF00102E829AAB00C35620 /* Debug */,
+				1EDF00112E829AAB00C35620 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1EDFFFFC2E829AA800C35620 /* Build configuration list for PBXProject "PJSIP2" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1EDF000D2E829AAB00C35620 /* Debug */,
+				1EDF000E2E829AAB00C35620 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1EDFFFF92E829AA800C35620 /* Project object */;
+}

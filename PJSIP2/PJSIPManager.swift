@@ -136,7 +136,7 @@ class PJSIPManager: ObservableObject {
         pjsua_acc_config_default(&accountConfig)
         
         let sipUri = "sip:\(username)@\(server)"
-        let regUri = "sip:\(server)"
+        let regUri = "sip:\(username)@\(server)"
         
         let sipString = createPJString(from: sipUri)
         let regString = createPJString(from: regUri)

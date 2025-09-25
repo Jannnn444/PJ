@@ -165,6 +165,7 @@ class PJSIPManager: ObservableObject {
         let status = pjsua_acc_add(&accountConfig, 1, &accountId)
         guard status == 0 else {
             throw PJSIPError.accountAddFailed(status: status)
+            print("\(accountId) failed the registration")
         }
         
         print("Account added successfully with ID: \(accountId)")

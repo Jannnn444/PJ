@@ -14,6 +14,7 @@ struct SIPPhoneView: View {
     @State private var sipServer = ""
     @State private var username = ""
     @State private var password = ""
+    @State private var proxy = ""
     @State private var isRegistering = false
     
     var body: some View {
@@ -32,6 +33,9 @@ struct SIPPhoneView: View {
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                     
                     SecureField("Password", text: $password)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                    
+                    SecureField("Proxy", text: $proxy)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                     
                     Button(action: registerWithSIP) {
@@ -138,7 +142,7 @@ struct SIPPhoneView: View {
     
     private func registerWithSIP() {
         isRegistering = true
-        pjsipManager.register(server: sipServer, username: username, password: password)
+        pjsipManager.register(server: sipServer, proxy: proxy, username: username, password: password)
         
         // Reset registering state after a delay
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {

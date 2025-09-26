@@ -108,7 +108,6 @@ class PJSIPManager: ObservableObject {
         guard status == 0 else {
             throw PJSIPError.transportCreationFailed(status: status)
         }
-        
         print("UDP transport created successfully with ID: \(transportId)")
     }
     
@@ -144,7 +143,7 @@ class PJSIPManager: ObservableObject {
         let passString = createPJString(from: password)
         let realmString = createPJString(from: "*")
         let schemeString = createPJString(from: "digest")
-        
+         
         accountConfig.id = sipString
         accountConfig.reg_uri = regString
         accountConfig.cred_count = 1

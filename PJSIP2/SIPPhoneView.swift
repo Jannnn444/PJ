@@ -14,10 +14,10 @@ struct SIPPhoneView: View {
     @State private var stateLabel = "N/A"
     
     // SIP Configuration Fields
-    @State private var sipServer = "sip.example.com"
-    @State private var sipProxy = ""
-    @State private var sipUsername = "user123"
-    @State private var sipPassword = "password"
+    @State private var sipServer = "oraclesbc.com"
+    @State private var sipProxy = "sip:10.2.122.6:5060;transport=tcp"
+    @State private var sipUsername = "16000"
+    @State private var sipPassword = "12388674"
     @State private var showPassword = false
     
     var body: some View {

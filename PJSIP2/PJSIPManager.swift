@@ -139,23 +139,11 @@ class PJSIPManager: ObservableObject {
     
     // MARK: - Initialization
     private init() {
-        setupPJSIP()
+        // Don't initialize PJSIP here - wait for explicit registration
     }
     
     deinit {
         pjsua_destroy()
-    }
-    
-    private func setupPJSIP() {
-        do {
-            state = .initializing
-            try initializePJSUA()
-            try createUDPTransport()
-            try startPJSUA()
-            debugPrint("PJSUA started successfully")
-        } catch {
-            handleError(error)
-        }
     }
     
     // MARK: - Public Methods (like VCS.shared.requireAgent)
@@ -166,9 +154,19 @@ class PJSIPManager: ObservableObject {
         }
         
         isConnecting = true
-        state = .registering
+        state = .initializing
         
         task = executeTask {
+            // Initialize PJSIP if not already done
+            if self.transportId == -1 {
+                try self.initializePJSUA()
+                try self.createUDPTransport()
+                try self.startPJSUA()
+                self.debugPrint("PJSUA started successfully")
+            }
+            
+            self.state = .registering
+            
             try await self.performRegistration(
                 server: self.serverConfig.domain,
                 proxy: self.serverConfig.proxy.isEmpty ? nil : self.serverConfig.proxy,

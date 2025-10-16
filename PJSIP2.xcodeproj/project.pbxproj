@@ -50,6 +50,7 @@
 		1EDF007F2E8399CA00C35620 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDF00772E8399B000C35620 /* UIKit.framework */; };
 		1EDF00822E839ACB00C35620 /* PJSIPManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDF00812E839ACB00C35620 /* PJSIPManager.swift */; };
 		1EDF00842E83C28500C35620 /* SIPPhoneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDF00832E83C28500C35620 /* SIPPhoneView.swift */; };
+		1EEE4A4C2EA0EBFE0079EF89 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EEE4A4B2EA0EBFE0079EF89 /* Model.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -100,6 +101,7 @@
 		1EDF00792E8399BF00C35620 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		1EDF00812E839ACB00C35620 /* PJSIPManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PJSIPManager.swift; sourceTree = "<group>"; };
 		1EDF00832E83C28500C35620 /* SIPPhoneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SIPPhoneView.swift; sourceTree = "<group>"; };
+		1EEE4A4B2EA0EBFE0079EF89 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -168,6 +170,7 @@
 				1EDF003D2E8394CF00C35620 /* PJSIPTest.swift */,
 				1EDF00812E839ACB00C35620 /* PJSIPManager.swift */,
 				1EDF00832E83C28500C35620 /* SIPPhoneView.swift */,
+				1EEE4A4B2EA0EBFE0079EF89 /* Model.swift */,
 			);
 			path = PJSIP2;
 			sourceTree = "<group>";
@@ -312,6 +315,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1EEE4A4C2EA0EBFE0079EF89 /* Model.swift in Sources */,
 				1EDF00822E839ACB00C35620 /* PJSIPManager.swift in Sources */,
 				1EDF003E2E8394CF00C35620 /* PJSIPTest.swift in Sources */,
 				1EDF00842E83C28500C35620 /* SIPPhoneView.swift in Sources */,

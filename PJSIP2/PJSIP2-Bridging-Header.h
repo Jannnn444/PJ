@@ -15,4 +15,7 @@
 // Or try with full path if needed:
  #import "pjsua-lib/pjsua.h"
 
+#import <pjlib.h>
+#import <pj/os.h>
+
 #endif

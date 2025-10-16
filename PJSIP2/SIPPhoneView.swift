@@ -11,42 +11,34 @@ import Combine
 struct SIPPhoneView: View {
     @StateObject private var pjsipManager = PJSIPManager.shared
     @State private var phoneNumber = ""
-    @State private var sipServer = ""
-    @State private var username = ""
-    @State private var password = ""
-    @State private var proxy = ""
-    @State private var isRegistering = false
+    @State private var stateLabel = "N/A"
     
     var body: some View {
         VStack(spacing: 20) {
+            // State Label (similar to ViewController's stateLabel)
+            Text(stateLabel)
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(Color(.systemGray6))
+                .cornerRadius(8)
+            
             // Registration Section
             if !pjsipManager.isRegistered {
-                VStack {
+                VStack(alignment: .leading, spacing: 12) {
                     Text("SIP Registration")
                         .font(.title2)
                         .fontWeight(.bold)
                     
-                    TextField("SIP Server", text: $sipServer)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                    
-                    TextField("Username", text: $username)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                    
-                    SecureField("Password", text: $password)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                    
-                    SecureField("Proxy", text: $proxy)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                    Text("Configuration set programmatically")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
                     
                     Button(action: registerWithSIP) {
-                        if isRegistering {
-                            ProgressView()
-                                .progressViewStyle(CircularProgressViewStyle())
-                        } else {
-                            Text("Register")
-                        }
+                        Text("Register")
+                            .frame(maxWidth: .infinity)
                     }
-                    .disabled(isRegistering || sipServer.isEmpty || username.isEmpty || password.isEmpty)
                     .buttonStyle(.borderedProminent)
                 }
                 .padding()
@@ -54,20 +46,29 @@ struct SIPPhoneView: View {
                 .cornerRadius(10)
             } else {
                 // Registration Status
-                HStack {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundColor(.green)
-                    Text("Registered as \(username)")
-                        .fontWeight(.medium)
+                VStack(spacing: 12) {
+                    HStack {
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundColor(.green)
+                        Text("Registered")
+                            .fontWeight(.medium)
+                    }
+                    .padding()
+                    .background(Color.green.opacity(0.1))
+                    .cornerRadius(10)
+                    
+                    Button(action: unregister) {
+                        Text("Unregister")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(.orange)
                 }
-                .padding()
-                .background(Color.green.opacity(0.1))
-                .cornerRadius(10)
             }
             
             // Call Section
             if pjsipManager.isRegistered {
-                VStack {
+                VStack(spacing: 16) {
                     Text("Make Call")
                         .font(.title2)
                         .fontWeight(.bold)
@@ -76,25 +77,23 @@ struct SIPPhoneView: View {
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .keyboardType(.phonePad)
                     
-                    // Call Status
-                    Text("Status: \(callStateText)")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                    
+                    // Current Call Info
                     if !pjsipManager.currentCall.isEmpty {
                         Text("Current Call: \(pjsipManager.currentCall)")
                             .font(.caption)
                             .foregroundColor(.blue)
+                            .padding(.vertical, 4)
                     }
                     
                     // Call Control Buttons
-                    HStack(spacing: 20) {
+                    VStack(spacing: 12) {
                         // Make Call Button
                         Button(action: makeCall) {
                             HStack {
                                 Image(systemName: "phone.fill")
                                 Text("Call")
                             }
+                            .frame(maxWidth: .infinity)
                         }
                         .disabled(phoneNumber.isEmpty || pjsipManager.callState != .idle)
                         .buttonStyle(.borderedProminent)
@@ -107,6 +106,7 @@ struct SIPPhoneView: View {
                                     Image(systemName: "phone.fill")
                                     Text("Answer")
                                 }
+                                .frame(maxWidth: .infinity)
                             }
                             .buttonStyle(.borderedProminent)
                             .tint(.blue)
@@ -121,10 +121,28 @@ struct SIPPhoneView: View {
                                     Image(systemName: "phone.down.fill")
                                     Text("Hangup")
                                 }
+                                .frame(maxWidth: .infinity)
                             }
                             .buttonStyle(.borderedProminent)
                             .tint(.red)
                         }
+                    }
+                    
+                    // Device Controls (similar to ViewController)
+                    VStack(spacing: 12) {
+                        Button(action: toggleMicrophone) {
+                            Text("Microphone: \(pjsipManager.device.microphoneEnable ? "ON" : "OFF")")
+                                .frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .tint(.blue)
+                        
+                        Button(action: toggleSpeaker) {
+                            Text("Speaker: \(pjsipManager.device.speakerEnable ? "ON" : "OFF")")
+                                .frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .tint(.blue)
                     }
                 }
                 .padding()
@@ -136,22 +154,91 @@ struct SIPPhoneView: View {
         }
         .padding()
         .navigationTitle("SIP Phone")
+        .onAppear {
+            setupSIP()
+        }
+    }
+    
+    // MARK: - Setup (similar to setupVCS in ViewController)
+    
+    private func setupSIP() {
+        pjsipManager.printConsoleLog = true
+        
+        // Configure server settings
+        pjsipManager.serverConfig.domain = "your.sip.server.com"
+        pjsipManager.serverConfig.proxy = "your.proxy.server.com"
+        pjsipManager.serverConfig.port = 5060
+        
+        // Configure user credentials
+        pjsipManager.username = "your_username"
+        pjsipManager.password = "your_password"
+        
+        // Configure user data (similar to VCS.shared.userData)
+        pjsipManager.userData.updateValue("user123", forKey: "UserID")
+        pjsipManager.userData.updateValue("12345", forKey: "AccountNumber")
+        pjsipManager.userData.updateValue("192.168.1.100", forKey: "ClientIP")
+        
+        // Setup observers (similar to VCS.shared.observer)
+        setupObservers()
+    }
+    
+    private func setupObservers() {
+        // Registration observers
+        pjsipManager.observer.registration.onMessage = { state in
+            print("SIP registration state: \(state.rawValue)")
+            self.stateLabel = state.rawValue
+        }
+        
+        pjsipManager.observer.registration.onSuccess = {
+            print("SIP registration successful")
+            self.stateLabel = "Registration Successful"
+        }
+        
+        pjsipManager.observer.registration.onFailure = { state, reason in
+            print("SIP registration failed: \(state.rawValue) - \(reason)")
+            self.stateLabel = "\(state.rawValue): \(reason)"
+        }
+        
+        // Call observers
+        pjsipManager.observer.call.onMessage = { state in
+            print("SIP call state: \(state.rawValue)")
+            self.stateLabel = state.rawValue
+        }
+        
+        pjsipManager.observer.call.onIncomingCall = { caller in
+            print("Incoming call from: \(caller)")
+            self.stateLabel = "Incoming call from: \(caller)"
+        }
+        
+        pjsipManager.observer.call.onCallConnected = {
+            print("Call connected")
+            self.stateLabel = "Call Connected"
+        }
+        
+        pjsipManager.observer.call.onCallEnded = {
+            print("Call ended")
+            self.stateLabel = "Call Ended"
+        }
+        
+        pjsipManager.observer.call.onFailure = { reason in
+            print("Call failed: \(reason)")
+            self.stateLabel = "Call Failed: \(reason)"
+        }
     }
     
     // MARK: - Actions
     
     private func registerWithSIP() {
-        isRegistering = true
-        pjsipManager.register(server: sipServer, proxy: proxy, username: username, password: password)
-        
-        // Reset registering state after a delay
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-            isRegistering = false
-        }
+        pjsipManager.registerAccount {}
+    }
+    
+    private func unregister() {
+        pjsipManager.unregister()
+        stateLabel = "Unregistered"
     }
     
     private func makeCall() {
-        pjsipManager.makeCall(to: phoneNumber)
+        pjsipManager.makeCall(to: phoneNumber) {}
     }
     
     private func answerCall() {
@@ -160,23 +247,16 @@ struct SIPPhoneView: View {
     
     private func hangupCall() {
         pjsipManager.hangupCall()
-        phoneNumber = "" // Clear the number after hangup
+        phoneNumber = ""
     }
     
-    // MARK: - Computed Properties
+    private func toggleMicrophone() {
+        pjsipManager.device.microphoneEnable.toggle()
+        // Apply microphone settings to PJSIP if needed
+    }
     
-    private var callStateText: String {
-        switch pjsipManager.callState {
-        case .idle:
-            return "Ready"
-        case .calling:
-            return "Calling..."
-        case .incoming:
-            return "Incoming Call"
-        case .connected:
-            return "Connected"
-        case .disconnected:
-            return "Call Ended"
-        }
+    private func toggleSpeaker() {
+        pjsipManager.device.speakerEnable.toggle()
+        // Apply speaker settings to PJSIP if needed
     }
 }

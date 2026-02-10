@@ -11,9 +11,16 @@ import Combine
 struct SIPPhoneView: View {
     @StateObject private var pjsipManager = PJSIPManager.shared
     @State private var phoneNumber = ""
-    @State private var stateLabel = "N/A"
+    @State private var stateLabel = "Library not started"
     
-    // SIP Configuration Fields
+    // Mode toggle
+    @State private var useDirectMode = true  // true = P2P like Android sample
+    
+    // P2P Direct Mode Config (matches Android sample)
+    @State private var localPort: String = "6000"
+    @State private var targetAddress: String = "192.168.1.9:6000"
+    
+    // SIP Registration Mode Config
     @State private var sipServer = "oraclesbc.com"
     @State private var sipProxy = "sip:10.2.122.6:5060;transport=tcp"
     @State private var sipUsername = "16000"
@@ -23,7 +30,7 @@ struct SIPPhoneView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
-                // State Label (similar to ViewController's stateLabel)
+                // State Label
                 Text(stateLabel)
                     .font(.caption)
                     .foregroundColor(.secondary)
@@ -32,189 +39,23 @@ struct SIPPhoneView: View {
                     .background(Color(.systemGray6))
                     .cornerRadius(8)
                 
-                // Registration Section
-                if !pjsipManager.isRegistered {
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("SIP Registration")
-                            .font(.title2)
-                            .fontWeight(.bold)
-                        
-                        // SIP Server
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("SIP Server")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                            TextField("sip.example.com", text: $sipServer)
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
-                                .autocapitalization(.none)
-                                .disableAutocorrection(true)
-                        }
-                        
-                        // SIP Proxy (Optional)
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("Proxy (Optional)")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                            TextField("proxy.example.com", text: $sipProxy)
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
-                                .autocapitalization(.none)
-                                .disableAutocorrection(true)
-                        }
-                        
-                        // Username
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("Username")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                            TextField("username", text: $sipUsername)
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
-                                .autocapitalization(.none)
-                                .disableAutocorrection(true)
-                        }
-                        
-                        // Password
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("Password")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                            HStack {
-                                if showPassword {
-                                    TextField("password", text: $sipPassword)
-                                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                                        .autocapitalization(.none)
-                                        .disableAutocorrection(true)
-                                } else {
-                                    SecureField("password", text: $sipPassword)
-                                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                                        .autocapitalization(.none)
-                                        .disableAutocorrection(true)
-                                }
-                                Button(action: { showPassword.toggle() }) {
-                                    Image(systemName: showPassword ? "eye.slash" : "eye")
-                                        .foregroundColor(.secondary)
-                                }
-                            }
-                        }
-                        
-                        Button(action: registerWithSIP) {
-                            Text("Register")
-                                .frame(maxWidth: .infinity)
-                        }
-                        .buttonStyle(.borderedProminent)
-                        .disabled(sipServer.isEmpty || sipUsername.isEmpty || sipPassword.isEmpty)
-                    }
-                    .padding()
-                    .background(Color(.systemGray6))
-                    .cornerRadius(10)
+                // Mode Picker
+                Picker("Mode", selection: $useDirectMode) {
+                    Text("P2P Direct").tag(true)
+                    Text("SIP Server").tag(false)
+                }
+                .pickerStyle(.segmented)
+                .padding(.horizontal)
+                
+                if useDirectMode {
+                    directModeSection
                 } else {
-                    // Registration Status
-                    VStack(spacing: 12) {
-                        HStack {
-                            Image(systemName: "checkmark.circle.fill")
-                                .foregroundColor(.green)
-                            VStack(alignment: .leading) {
-                                Text("Registered")
-                                    .fontWeight(.medium)
-                                Text(sipUsername + "@" + sipServer)
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                            }
-                        }
-                        .padding()
-                        .background(Color.green.opacity(0.1))
-                        .cornerRadius(10)
-                        
-                        Button(action: unregister) {
-                            Text("Unregister")
-                                .frame(maxWidth: .infinity)
-                        }
-                        .buttonStyle(.borderedProminent)
-                        .tint(.orange)
-                    }
+                    registrationModeSection
                 }
                 
-                // Call Section
+                // Call Section - shown when library is ready
                 if pjsipManager.isRegistered {
-                    VStack(spacing: 16) {
-                        Text("Make Call")
-                            .font(.title2)
-                            .fontWeight(.bold)
-                        
-                        TextField("Phone Number or SIP URI", text: $phoneNumber)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .keyboardType(.phonePad)
-                        
-                        // Current Call Info
-                        if !pjsipManager.currentCall.isEmpty {
-                            Text("Current Call: \(pjsipManager.currentCall)")
-                                .font(.caption)
-                                .foregroundColor(.blue)
-                                .padding(.vertical, 4)
-                        }
-                        
-                        // Call Control Buttons
-                        VStack(spacing: 12) {
-                            // Make Call Button
-                            Button(action: makeCall) {
-                                HStack {
-                                    Image(systemName: "phone.fill")
-                                    Text("Call")
-                                }
-                                .frame(maxWidth: .infinity)
-                            }
-                            .disabled(phoneNumber.isEmpty || pjsipManager.callState != .idle)
-                            .buttonStyle(.borderedProminent)
-                            .tint(.green)
-                            
-                            // Answer Button (for incoming calls)
-                            if pjsipManager.callState == .incoming {
-                                Button(action: answerCall) {
-                                    HStack {
-                                        Image(systemName: "phone.fill")
-                                        Text("Answer")
-                                    }
-                                    .frame(maxWidth: .infinity)
-                                }
-                                .buttonStyle(.borderedProminent)
-                                .tint(.blue)
-                            }
-                            
-                            // Hangup Button
-                            if pjsipManager.callState == .calling ||
-                               pjsipManager.callState == .connected ||
-                               pjsipManager.callState == .incoming {
-                                Button(action: hangupCall) {
-                                    HStack {
-                                        Image(systemName: "phone.down.fill")
-                                        Text("Hangup")
-                                    }
-                                    .frame(maxWidth: .infinity)
-                                }
-                                .buttonStyle(.borderedProminent)
-                                .tint(.red)
-                            }
-                        }
-                        
-                        // Device Controls (similar to ViewController)
-                        VStack(spacing: 12) {
-                            Button(action: toggleMicrophone) {
-                                Text("Microphone: \(pjsipManager.device.microphoneEnable ? "ON" : "OFF")")
-                                    .frame(maxWidth: .infinity)
-                            }
-                            .buttonStyle(.borderedProminent)
-                            .tint(.blue)
-                            
-                            Button(action: toggleSpeaker) {
-                                Text("Speaker: \(pjsipManager.device.speakerEnable ? "ON" : "OFF")")
-                                    .frame(maxWidth: .infinity)
-                            }
-                            .buttonStyle(.borderedProminent)
-                            .tint(.blue)
-                        }
-                    }
-                    .padding()
-                    .background(Color(.systemGray6))
-                    .cornerRadius(10)
+                    callSection
                 }
                 
                 Spacer(minLength: 20)
@@ -222,94 +63,291 @@ struct SIPPhoneView: View {
             .padding()
         }
         .navigationTitle("SIP Phone")
-        .onAppear {
-            setupSIP()
+        .onAppear { setupObservers() }
+    }
+    
+    // MARK: - P2P Direct Mode (mirrors Android pjsua2 sample)
+    
+    private var directModeSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("P2P Direct Call")
+                .font(.title2)
+                .fontWeight(.bold)
+            
+            Text("Same as Android sample: start library on a port, call IP:port directly")
+                .font(.caption)
+                .foregroundColor(.secondary)
+            
+            // Local Port
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Local SIP Port")
+                    .font(.caption).foregroundColor(.secondary)
+                TextField("6000", text: $localPort)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .keyboardType(.numberPad)
+            }
+            
+            // Target Address
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Target Address (IP:Port)")
+                    .font(.caption).foregroundColor(.secondary)
+                TextField("192.168.1.9:6000", text: $targetAddress)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .autocapitalization(.none)
+                    .disableAutocorrection(true)
+            }
+            
+            if !pjsipManager.isRegistered {
+                Button(action: startDirectMode) {
+                    Text("Start Library")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderedProminent)
+            } else {
+                HStack {
+                    Image(systemName: "checkmark.circle.fill")
+                        .foregroundColor(.green)
+                    Text("Library Running (port \(localPort))")
+                        .fontWeight(.medium)
+                }
+                .padding()
+                .background(Color.green.opacity(0.1))
+                .cornerRadius(10)
+                
+                Button(action: stopLibrary) {
+                    Text("Stop Library")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(.orange)
+            }
         }
+        .padding()
+        .background(Color(.systemGray6))
+        .cornerRadius(10)
     }
     
-    // MARK: - Setup (similar to setupVCS in ViewController)
+    // MARK: - SIP Registration Mode
     
-    private func setupSIP() {
-        pjsipManager.printConsoleLog = true
-        
-        // Setup observers (similar to VCS.shared.observer)
-        setupObservers()
+    private var registrationModeSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("SIP Registration")
+                .font(.title2)
+                .fontWeight(.bold)
+            
+            if !pjsipManager.isRegistered {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("SIP Server").font(.caption).foregroundColor(.secondary)
+                    TextField("sip.example.com", text: $sipServer)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .autocapitalization(.none)
+                }
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Proxy (Optional)").font(.caption).foregroundColor(.secondary)
+                    TextField("proxy.example.com", text: $sipProxy)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .autocapitalization(.none)
+                }
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Username").font(.caption).foregroundColor(.secondary)
+                    TextField("username", text: $sipUsername)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .autocapitalization(.none)
+                }
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Password").font(.caption).foregroundColor(.secondary)
+                    HStack {
+                        if showPassword {
+                            TextField("password", text: $sipPassword)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .autocapitalization(.none)
+                        } else {
+                            SecureField("password", text: $sipPassword)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                        }
+                        Button(action: { showPassword.toggle() }) {
+                            Image(systemName: showPassword ? "eye.slash" : "eye")
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                }
+                
+                Button(action: registerWithSIP) {
+                    Text("Register")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderedProminent)
+                .disabled(sipServer.isEmpty || sipUsername.isEmpty || sipPassword.isEmpty)
+            } else {
+                HStack {
+                    Image(systemName: "checkmark.circle.fill")
+                        .foregroundColor(.green)
+                    VStack(alignment: .leading) {
+                        Text("Registered").fontWeight(.medium)
+                        Text("\(sipUsername)@\(sipServer)")
+                            .font(.caption).foregroundColor(.secondary)
+                    }
+                }
+                .padding()
+                .background(Color.green.opacity(0.1))
+                .cornerRadius(10)
+                
+                Button(action: unregister) {
+                    Text("Unregister")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(.orange)
+            }
+        }
+        .padding()
+        .background(Color(.systemGray6))
+        .cornerRadius(10)
     }
+    
+    // MARK: - Call Section
+    
+    private var callSection: some View {
+        VStack(spacing: 16) {
+            Text("Make Call")
+                .font(.title2)
+                .fontWeight(.bold)
+            
+            if useDirectMode {
+                // In P2P mode, show the target address as the call destination
+                Text("Target: sip:\(targetAddress)")
+                    .font(.caption)
+                    .foregroundColor(.blue)
+            }
+            
+            TextField(useDirectMode ? "IP:Port (or use target above)" : "Phone Number or SIP URI", text: $phoneNumber)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .keyboardType(useDirectMode ? .default : .phonePad)
+            
+            // Current Call Info
+            if !pjsipManager.currentCall.isEmpty {
+                HStack {
+                    Circle()
+                        .fill(pjsipManager.callState == .connected ? Color.green : Color.orange)
+                        .frame(width: 8, height: 8)
+                    Text("Call: \(pjsipManager.currentCall)")
+                        .font(.caption)
+                        .foregroundColor(.blue)
+                }
+                .padding(.vertical, 4)
+            }
+            
+            // Call Buttons
+            VStack(spacing: 12) {
+                // Make Call
+                Button(action: makeCall) {
+                    HStack {
+                        Image(systemName: "phone.fill")
+                        Text("Call")
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+                .disabled(pjsipManager.callState == .calling || pjsipManager.callState == .connected)
+                .buttonStyle(.borderedProminent)
+                .tint(.green)
+                
+                // Answer (incoming only)
+                if pjsipManager.callState == .incoming {
+                    Button(action: { pjsipManager.answerCall() }) {
+                        HStack {
+                            Image(systemName: "phone.fill")
+                            Text("Answer")
+                        }
+                        .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(.blue)
+                }
+                
+                // Hangup
+                if pjsipManager.callState == .calling ||
+                   pjsipManager.callState == .connected ||
+                   pjsipManager.callState == .incoming {
+                    Button(action: { pjsipManager.hangupCall() }) {
+                        HStack {
+                            Image(systemName: "phone.down.fill")
+                            Text("Hangup")
+                        }
+                        .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(.red)
+                }
+            }
+            
+            // Device Controls
+            HStack(spacing: 12) {
+                Button(action: { pjsipManager.device.microphoneEnable.toggle() }) {
+                    Text("Mic: \(pjsipManager.device.microphoneEnable ? "ON" : "OFF")")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(.blue)
+                
+                Button(action: { pjsipManager.device.speakerEnable.toggle() }) {
+                    Text("Speaker: \(pjsipManager.device.speakerEnable ? "ON" : "OFF")")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(.blue)
+            }
+        }
+        .padding()
+        .background(Color(.systemGray6))
+        .cornerRadius(10)
+    }
+    
+    // MARK: - Setup
     
     private func setupObservers() {
-        // Registration observers
+        PJSIPManager.shared.printConsoleLog = true
+        
         pjsipManager.observer.registration.onMessage = { state in
-            print("SIP registration state: \(state.rawValue)")
-            DispatchQueue.main.async {
-                self.stateLabel = state.rawValue
-            }
+            DispatchQueue.main.async { self.stateLabel = state.rawValue }
         }
-        
         pjsipManager.observer.registration.onSuccess = {
-            print("SIP registration successful")
-            DispatchQueue.main.async {
-                self.stateLabel = "Registration Successful"
-            }
+            DispatchQueue.main.async { self.stateLabel = "Registration Successful" }
         }
-        
         pjsipManager.observer.registration.onFailure = { state, reason in
-            print("SIP registration failed: \(state.rawValue) - \(reason)")
-            DispatchQueue.main.async {
-                self.stateLabel = "\(state.rawValue): \(reason)"
-            }
+            DispatchQueue.main.async { self.stateLabel = "\(state.rawValue): \(reason)" }
         }
-        
-        // Call observers
-        pjsipManager.observer.call.onMessage = { state in
-            print("SIP call state: \(state.rawValue)")
-            DispatchQueue.main.async {
-                self.stateLabel = state.rawValue
-            }
-        }
-        
         pjsipManager.observer.call.onIncomingCall = { caller in
-            print("Incoming call from: \(caller)")
-            DispatchQueue.main.async {
-                self.stateLabel = "Incoming call from: \(caller)"
-            }
+            DispatchQueue.main.async { self.stateLabel = "Incoming: \(caller)" }
         }
-        
         pjsipManager.observer.call.onCallConnected = {
-            print("Call connected")
-            DispatchQueue.main.async {
-                self.stateLabel = "Call Connected"
-            }
+            DispatchQueue.main.async { self.stateLabel = "Call Connected" }
         }
-        
         pjsipManager.observer.call.onCallEnded = {
-            print("Call ended")
-            DispatchQueue.main.async {
-                self.stateLabel = "Call Ended"
-            }
-        }
-        
-        pjsipManager.observer.call.onFailure = { reason in
-            print("Call failed: \(reason)")
-            DispatchQueue.main.async {
-                self.stateLabel = "Call Failed: \(reason)"
-            }
+            DispatchQueue.main.async { self.stateLabel = "Call Ended" }
         }
     }
     
     // MARK: - Actions
     
+    private func startDirectMode() {
+        let port = UInt16(localPort) ?? 6000
+        stateLabel = "Starting library on port \(port)..."
+        pjsipManager.startLibrary(port: port, useUDP: true)
+    }
+    
+    private func stopLibrary() {
+        pjsipManager.shutdownLibrary()
+        stateLabel = "Library stopped"
+    }
+    
     private func registerWithSIP() {
-        // Update manager configuration with user input
         pjsipManager.serverConfig.domain = sipServer
         pjsipManager.serverConfig.proxy = sipProxy
         pjsipManager.username = sipUsername
         pjsipManager.password = sipPassword
-        
-        // Configure user data (similar to VCS.shared.userData)
-        pjsipManager.userData.updateValue(sipUsername, forKey: "UserID")
-        pjsipManager.userData.updateValue(sipServer, forKey: "Server")
-        
-        // Call register with the configured values
         pjsipManager.registerAccount {}
     }
     
@@ -319,25 +357,15 @@ struct SIPPhoneView: View {
     }
     
     private func makeCall() {
-        pjsipManager.makeCall(to: phoneNumber) {}
-    }
-    
-    private func answerCall() {
-        pjsipManager.answerCall()
-    }
-    
-    private func hangupCall() {
-        pjsipManager.hangupCall()
-        phoneNumber = ""
-    }
-    
-    private func toggleMicrophone() {
-        pjsipManager.device.microphoneEnable.toggle()
-        // Apply microphone settings to PJSIP if needed
-    }
-    
-    private func toggleSpeaker() {
-        pjsipManager.device.speakerEnable.toggle()
-        // Apply speaker settings to PJSIP if needed
+        let destination: String
+        if useDirectMode {
+            // Use phoneNumber if filled, otherwise use targetAddress
+            destination = phoneNumber.isEmpty ? targetAddress : phoneNumber
+        } else {
+            destination = phoneNumber
+        }
+        
+        guard !destination.isEmpty else { return }
+        pjsipManager.makeCall(to: destination)
     }
 }

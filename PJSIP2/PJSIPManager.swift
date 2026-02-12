@@ -1,7 +1,6 @@
 import Foundation
 import AVFoundation
 
-
 // MARK: - Main Manager Class
 class PJSIPManager: ObservableObject {
     
@@ -45,7 +44,7 @@ class PJSIPManager: ObservableObject {
     }
     
     enum CallState {
-        case idle, calling, incoming, connected, disconnected
+        case idle, calling, ringing, incoming, connected, disconnected
     }
     
     // MARK: - Initialization
@@ -55,10 +54,32 @@ class PJSIPManager: ObservableObject {
         shutdownLibrary()
     }
     
+    // MARK: - Audio Session (CRITICAL for real device audio)
+    
+    /// Configure AVAudioSession for VoIP - must be called before audio flows
+    private func configureAudioSession() {
+        do {
+            let session = AVAudioSession.sharedInstance()
+            try session.setCategory(.playAndRecord, mode: .voiceChat, options: [.defaultToSpeaker, .allowBluetooth])
+            try session.setActive(true)
+            debugPrint("AVAudioSession configured for VoIP")
+        } catch {
+            debugPrint("AVAudioSession error: \(error.localizedDescription)")
+        }
+    }
+    
+    /// Deactivate audio session when call ends
+    private func deactivateAudioSession() {
+        do {
+            try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+            debugPrint("AVAudioSession deactivated")
+        } catch {
+            debugPrint("AVAudioSession deactivate error: \(error.localizedDescription)")
+        }
+    }
+    
     // MARK: - Library Lifecycle (mirrors Android's init → start → destroy)
     
-    /// Initialize the PJSIP library - equivalent to Android's Endpoint.libCreate + libInit + transportCreate + libStart
-    /// Call this ONCE at app startup or before first use.
     public func startLibrary(port: UInt16 = 6000, useUDP: Bool = true) {
         pjsipQueue.async {
             self.registerThreadIfNeeded()
@@ -69,20 +90,20 @@ class PJSIPManager: ObservableObject {
             }
             
             do {
-                // Step 1: pjsua_create() - equivalent to Android Endpoint.libCreate()
+                // Step 1: pjsua_create()
                 let createStatus = pjsua_create()
                 guard createStatus == 0 else {
                     throw PJSIPError.initializationFailed(status: createStatus)
                 }
                 self.debugPrint("pjsua_create() OK")
                 
-                // Step 2: Configure and init - equivalent to Android EpConfig + libInit()
+                // Step 2: Configure and init
                 var config = pjsua_config()
                 pjsua_config_default(&config)
                 config.cb.on_call_state = onCallStateCallback
                 config.cb.on_incoming_call = onIncomingCallCallback
+                config.cb.on_call_media_state = onCallMediaStateCallback  // IMPORTANT: audio bridge
                 config.cb.on_reg_state = onRegStateCallback
-                // Android uses 1 worker thread by default
                 config.thread_cnt = 1
                 
                 var logConfig = pjsua_logging_config()
@@ -91,9 +112,8 @@ class PJSIPManager: ObservableObject {
                 
                 var mediaConfig = pjsua_media_config()
                 pjsua_media_config_default(&mediaConfig)
-                // Match Android defaults
                 mediaConfig.clock_rate = 16000
-                mediaConfig.snd_clock_rate = 0  // follow clock_rate
+                mediaConfig.snd_clock_rate = 0
                 
                 let initStatus = pjsua_init(&config, &logConfig, &mediaConfig)
                 guard initStatus == 0 else {
@@ -102,7 +122,7 @@ class PJSIPManager: ObservableObject {
                 }
                 self.debugPrint("pjsua_init() OK")
                 
-                // Step 3: Create transport - equivalent to Android transportCreate()
+                // Step 3: Create transport
                 var transportConfig = pjsua_transport_config()
                 pjsua_transport_config_default(&transportConfig)
                 transportConfig.port = UInt32(port)
@@ -115,7 +135,7 @@ class PJSIPManager: ObservableObject {
                 }
                 self.debugPrint("Transport created (ID: \(self.transportId)), port: \(port), UDP: \(useUDP)")
                 
-                // Step 4: Add local account (no registration) - matches Android's "sip:localhost"
+                // Step 4: Add local account (no registration)
                 var accConfig = pjsua_acc_config()
                 pjsua_acc_config_default(&accConfig)
                 accConfig.id = self.createPJString(from: "sip:localhost")
@@ -127,7 +147,7 @@ class PJSIPManager: ObservableObject {
                 }
                 self.debugPrint("Local account added (ID: \(self.accountId))")
                 
-                // Step 5: Start - equivalent to Android libStart()
+                // Step 5: Start
                 let startStatus = pjsua_start()
                 guard startStatus == 0 else {
                     pjsua_destroy()
@@ -138,7 +158,7 @@ class PJSIPManager: ObservableObject {
                 self.debugPrint("PJSUA started successfully - RUNNING")
                 
                 DispatchQueue.main.async {
-                    self.state = .registered  // library is ready
+                    self.state = .registered
                     self.isRegistered = true
                 }
                 
@@ -153,27 +173,24 @@ class PJSIPManager: ObservableObject {
         }
     }
     
-    /// Shutdown library - equivalent to Android Endpoint.libDestroy()
     public func shutdownLibrary() {
         pjsipQueue.async {
             self.registerThreadIfNeeded()
             
             guard self.isLibraryInitialized else { return }
             
-            // Hangup all calls first (matches Android's ep.hangupAllCalls())
             pjsua_call_hangup_all()
             
-            // Delete account
             if self.accountId != -1 {
                 pjsua_acc_del(self.accountId)
                 self.accountId = -1
             }
             
-            // Destroy PJSUA (handles transport cleanup internally)
             pjsua_destroy()
             self.transportId = -1
             self.isLibraryInitialized = false
             
+            self.deactivateAudioSession()
             self.debugPrint("PJSUA destroyed")
             
             DispatchQueue.main.async {
@@ -187,7 +204,6 @@ class PJSIPManager: ObservableObject {
     
     // MARK: - SIP Account Registration (for registrar-based calling)
     
-    /// Register with a SIP server - use this when you need server registration
     public func registerAccount(_ completion: @escaping () -> Void) {
         if isConnecting {
             fail(.failSystemException, "Registration already in progress", cancelTask: false)
@@ -198,7 +214,6 @@ class PJSIPManager: ObservableObject {
         state = .initializing
         
         task = executeTask {
-            // Init library if not done
             if !self.isLibraryInitialized {
                 try self.initLibrarySync()
             }
@@ -226,10 +241,8 @@ class PJSIPManager: ObservableObject {
         }
     }
     
-    // MARK: - Call Methods (mirrors Android's MyCall.makeCall)
+    // MARK: - Outgoing Call
     
-    /// Make a direct P2P call - matches Android sample's "sip:IP:PORT" pattern
-    /// The Android log shows: "Making call with acc #0 to sip:192.168.1.9:6000"
     public func makeCall(to destination: String, completion: @escaping () -> Void = {}) {
         guard isLibraryInitialized, accountId != -1 else {
             fail(.failSystemException, "Library not initialized. Call startLibrary() first.")
@@ -239,12 +252,16 @@ class PJSIPManager: ObservableObject {
         pjsipQueue.async {
             self.registerThreadIfNeeded()
             
-            // Android sets null sound device before calling
-            // This avoids audio device conflicts on the emulator/simulator
-            let nullSndStatus = pjsua_set_null_snd_dev()
-            self.debugPrint("Set null sound device: \(nullSndStatus == 0 ? "OK" : "Failed(\(nullSndStatus))")")
+            // Configure audio session for real device
+            self.configureAudioSession()
             
-            // Build SIP URI - match Android format: "sip:192.168.1.9:6000"
+            // Set null sound device only on simulator
+            #if targetEnvironment(simulator)
+            let nullSndStatus = pjsua_set_null_snd_dev()
+            self.debugPrint("Set null sound device (simulator): \(nullSndStatus == 0 ? "OK" : "Failed(\(nullSndStatus))")")
+            #endif
+            
+            // Build SIP URI
             let uri: String
             if destination.hasPrefix("sip:") {
                 uri = destination
@@ -253,15 +270,12 @@ class PJSIPManager: ObservableObject {
             }
             
             var uriStr = self.createPJString(from: uri)
-            
             self.debugPrint("Making call to: \(uri)")
             
             let status = pjsua_call_make_call(
                 self.accountId,
                 &uriStr,
-                nil,    // call_setting (use defaults)
-                nil,    // user_data
-                nil,    // msg_data
+                nil, nil, nil,
                 &self.callId
             )
             
@@ -282,21 +296,58 @@ class PJSIPManager: ObservableObject {
         }
     }
     
+    // MARK: - Incoming Call: Answer / Reject
+    
+    /// Answer incoming call with 200 OK
+    /// 180 Ringing was already sent in handleIncomingCall
     public func answerCall() {
+        pjsipQueue.async {
+            self.registerThreadIfNeeded()
+            guard self.callId != -1 else {
+                self.debugPrint("answerCall: no active call")
+                return
+            }
+            
+            // Configure audio for real device before answering
+            self.configureAudioSession()
+            
+            #if targetEnvironment(simulator)
+            let nullSndStatus = pjsua_set_null_snd_dev()
+            self.debugPrint("Set null sound device (simulator): \(nullSndStatus == 0 ? "OK" : "Failed(\(nullSndStatus))")")
+            #endif
+            
+            // Answer with 200 OK - establishes media session
+            let status = pjsua_call_answer(self.callId, 200, nil, nil)
+            if status == 0 {
+                self.debugPrint("Answer call 200 OK: success")
+                DispatchQueue.main.async {
+                    self.callState = .connected
+                    self.state = .callConnected
+                }
+            } else {
+                self.debugPrint("Answer call failed: \(status)")
+            }
+        }
+    }
+    
+    /// Reject incoming call with 486 Busy Here
+    public func rejectCall() {
         pjsipQueue.async {
             self.registerThreadIfNeeded()
             guard self.callId != -1 else { return }
             
-            let status = pjsua_call_answer(self.callId, 200, nil, nil)
-            if status == 0 {
-                DispatchQueue.main.async {
-                    self.callState = .connected
-                }
+            let status = pjsua_call_answer(self.callId, 486, nil, nil)
+            self.debugPrint("Reject call: \(status == 0 ? "OK" : "Failed(\(status))")")
+            
+            DispatchQueue.main.async {
+                self.callState = .idle
+                self.currentCall = ""
+                self.callId = -1
             }
-            self.debugPrint("Answer call: \(status == 0 ? "OK" : "Failed(\(status))")")
         }
     }
     
+    /// Hangup active call
     public func hangupCall() {
         pjsipQueue.async {
             self.registerThreadIfNeeded()
@@ -313,7 +364,6 @@ class PJSIPManager: ObservableObject {
         }
     }
     
-    /// Hangup all calls - matches Android's ep.hangupAllCalls()
     public func hangupAllCalls() {
         pjsipQueue.async {
             self.registerThreadIfNeeded()
@@ -340,6 +390,7 @@ class PJSIPManager: ObservableObject {
         pjsua_config_default(&config)
         config.cb.on_call_state = onCallStateCallback
         config.cb.on_incoming_call = onIncomingCallCallback
+        config.cb.on_call_media_state = onCallMediaStateCallback
         config.cb.on_reg_state = onRegStateCallback
         
         var logConfig = pjsua_logging_config()
@@ -355,7 +406,6 @@ class PJSIPManager: ObservableObject {
             throw PJSIPError.initializationFailed(status: initStatus)
         }
         
-        // Default TCP transport for registrar-based calling
         var transportConfig = pjsua_transport_config()
         pjsua_transport_config_default(&transportConfig)
         transportConfig.port = 0
@@ -383,7 +433,6 @@ class PJSIPManager: ObservableObject {
             pjsipQueue.async {
                 self.registerThreadIfNeeded()
                 
-                // Remove old account if exists
                 if self.accountId != -1 {
                     pjsua_acc_del(self.accountId)
                     self.accountId = -1
@@ -437,7 +486,6 @@ class PJSIPManager: ObservableObject {
         var pjThread: OpaquePointer? = nil
         let threadDescSize = 256
         let threadDesc = UnsafeMutablePointer<Int>.allocate(capacity: threadDescSize / MemoryLayout<Int>.size)
-        // Note: intentionally NOT deallocating - PJSIP keeps a reference
         
         let status = "pjsip_queue".withCString { namePtr in
             pj_thread_register(namePtr, threadDesc, &pjThread)
@@ -478,7 +526,7 @@ class PJSIPManager: ObservableObject {
     }
     
     private func createPJString(from swiftString: String) -> pj_str_t {
-        let cString = strdup(swiftString)!  // strdup allocates - stays alive
+        let cString = strdup(swiftString)!
         let length = Int32(swiftString.utf8.count)
         return pj_str_t(ptr: cString, slen: pj_ssize_t(length))
     }
@@ -506,6 +554,16 @@ class PJSIPManager: ObservableObject {
                 self.state = .callInProgress
                 self.debugPrint("Call state: CALLING")
                 
+            case PJSIP_INV_STATE_INCOMING:
+                self.debugPrint("Call state: INCOMING")
+                
+            case PJSIP_INV_STATE_EARLY:
+                self.callState = .ringing
+                self.debugPrint("Call state: EARLY (ringing)")
+                
+            case PJSIP_INV_STATE_CONNECTING:
+                self.debugPrint("Call state: CONNECTING")
+                
             case PJSIP_INV_STATE_CONFIRMED:
                 self.callState = .connected
                 self.state = .callConnected
@@ -513,18 +571,14 @@ class PJSIPManager: ObservableObject {
                 self.debugPrint("Call state: CONFIRMED (connected)")
                 
             case PJSIP_INV_STATE_DISCONNECTED:
-                self.callState = .idle  // back to idle, ready for next call
+                let prevState = self.callState
+                self.callState = .idle
                 self.state = .callEnded
                 self.currentCall = ""
                 self.callId = -1
                 self.observer.call.onCallEnded?()
-                self.debugPrint("Call state: DISCONNECTED")
-                
-            case PJSIP_INV_STATE_EARLY:
-                self.debugPrint("Call state: EARLY (ringing)")
-                
-            case PJSIP_INV_STATE_CONNECTING:
-                self.debugPrint("Call state: CONNECTING")
+                self.deactivateAudioSession()
+                self.debugPrint("Call state: DISCONNECTED (was: \(prevState))")
                 
             default:
                 self.debugPrint("Call state: \(stateValue.rawValue)")
@@ -532,8 +586,16 @@ class PJSIPManager: ObservableObject {
         }
     }
     
+    /// Handle incoming call - sends 180 Ringing automatically, waits for user to answer/reject
     func handleIncomingCall(accountId: Int32, callId: Int32) {
         self.callId = callId
+        
+        // Send 180 Ringing immediately so caller hears ringback tone
+        pjsipQueue.async {
+            self.registerThreadIfNeeded()
+            let ringStatus = pjsua_call_answer(callId, 180, nil, nil)
+            self.debugPrint("Sent 180 Ringing for call \(callId): \(ringStatus == 0 ? "OK" : "Failed(\(ringStatus))")")
+        }
         
         DispatchQueue.main.async {
             self.callState = .incoming
@@ -548,6 +610,31 @@ class PJSIPManager: ObservableObject {
                     self.debugPrint("Incoming call from: \(remote)")
                 }
             }
+        }
+    }
+    
+    /// Handle media state - connects audio bridge when call media becomes active
+    /// WITHOUT THIS, you get a connected call but NO AUDIO
+    func handleCallMediaState(callId: Int32) {
+        var callInfo = pjsua_call_info()
+        guard pjsua_call_get_info(callId, &callInfo) == 0 else {
+            debugPrint("handleCallMediaState: failed to get call info")
+            return
+        }
+        
+        debugPrint("Media state changed for call \(callId), status: \(callInfo.media_status.rawValue)")
+        
+        if callInfo.media_status == PJSUA_CALL_MEDIA_ACTIVE {
+            let confPort = callInfo.conf_slot
+            
+            // Connect call's audio to sound device (you hear them)
+            pjsua_conf_connect(confPort, 0)
+            // Connect sound device to call's audio (they hear you)
+            pjsua_conf_connect(0, confPort)
+            
+            debugPrint("Audio bridge connected: call port \(confPort) <-> sound device 0")
+        } else {
+            debugPrint("Media not active yet, status: \(callInfo.media_status.rawValue)")
         }
     }
     
@@ -582,6 +669,10 @@ private func onCallStateCallback(call_id: pjsua_call_id, e: UnsafeMutablePointer
 
 private func onIncomingCallCallback(acc_id: pjsua_acc_id, call_id: pjsua_call_id, rdata: UnsafeMutablePointer<pjsip_rx_data>?) {
     PJSIPManager.shared.handleIncomingCall(accountId: acc_id, callId: call_id)
+}
+
+private func onCallMediaStateCallback(call_id: pjsua_call_id) {
+    PJSIPManager.shared.handleCallMediaState(callId: call_id)
 }
 
 private func onRegStateCallback(acc_id: pjsua_acc_id) {

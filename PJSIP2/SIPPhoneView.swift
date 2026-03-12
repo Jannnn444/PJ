@@ -391,11 +391,12 @@ struct SIPPhoneView: View {
             sipURI = "sip:\(destination)"
         } else {
             // Phone number only — needs a SIP server domain
-            let sipServer = $pjsipManager.sipServer //"192.168.1.100:5060"
+            let sipServer = pjsipManager.sipServer //"192.168.1.100:5060"
             sipURI = "sip:\(destination)@\(sipServer)"
+//            pjsipManager.makeCall(to: sipURI)
         }
         
-        pjsipManager.makeCall(to: sipURI)
+        pjsipManager.makeCall(to: sipURI)  // ✅ always called
     }
 }
 

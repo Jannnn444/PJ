@@ -8,11 +8,11 @@ class PJSIPManager: ObservableObject {
     // MARK: - Singleton
     static let shared = PJSIPManager()
     
-    // 49991
-//    var sipServer: String = "10.2.201.62:6000"  // ← Device1 set: Device 2's IP, port 600
+    // when its 49991
+//    var sipServer: String = "10.2.201.62:6000"  // ← Device1 set: Device 2's IP
     
-    // 49992
-    var sipServer: String = "10.2.201.216:5060" // ← Device2 set: Device 1's IP, port 600
+    // when its 49992
+    var sipServer: String = "10.2.201.216:5060" // ← Device2 set: Device 1's IP
     // hualiteq iphone = 10.2.201.216:5060
     // janus iphone = 10.2.201.62:5060
     

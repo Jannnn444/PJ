@@ -8,8 +8,11 @@ class PJSIPManager: ObservableObject {
     // MARK: - Singleton
     static let shared = PJSIPManager()
     
-    var sipServer:String = "10.2.201.62:5060"
+    // 49991
+//    var sipServer: String = "10.2.201.62:6000"  // ← Device1 set: Device 2's IP, port 600
     
+    // 49992
+    var sipServer: String = "10.2.201.216:5060" // ← Device2 set: Device 1's IP, port 600
     // hualiteq iphone = 10.2.201.216:5060
     // janus iphone = 10.2.201.62:5060
     
@@ -550,22 +553,26 @@ class PJSIPManager: ObservableObject {
     func handleIncomingCall(accountId: Int32, callId: Int32) {
         self.callId = callId
         
-        // ✅ Must send 180 Ringing immediately or caller gets no feedback
+        // ✅ Send 180 Ringing — still on PJSIP callback thread, safe
         pjsua_call_answer(callId, 180, nil, nil)
         
+        // ✅ Get call info HERE while still on PJSIP thread
+        var callInfo = pjsua_call_info()
+        let remote: String
+        if pjsua_call_get_info(callId, &callInfo) == 0,
+           let remotePtr = callInfo.remote_info.ptr {
+            remote = String(cString: remotePtr)
+        } else {
+            remote = "Unknown"
+        }
+        
+        // ✅ Now dispatch to main — only pass the already-extracted String
         DispatchQueue.main.async {
             self.callState = .incoming
             self.state = .incomingCall
-            
-            var callInfo = pjsua_call_info()
-            if pjsua_call_get_info(callId, &callInfo) == 0 {
-                if let remotePtr = callInfo.remote_info.ptr {
-                    let remote = String(cString: remotePtr)
-                    self.currentCall = remote
-                    self.observer.call.onIncomingCall?(remote)
-                    self.debugPrint("Incoming call from: \(remote)")
-                }
-            }
+            self.currentCall = remote
+            self.observer.call.onIncomingCall?(remote)
+            self.debugPrint("Incoming call from: \(remote)")
         }
     }
     

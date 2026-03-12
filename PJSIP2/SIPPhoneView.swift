@@ -18,12 +18,22 @@ struct SIPPhoneView: View {
     
     // P2P Direct Mode Config (matches Android sample)
     @State private var localPort: String = "6000"
-    @State private var targetAddress: String = "192.168.1.9:6000"
+    
+    //device 1
+//    @State private var targetAddress: String = "10.2.201.62:6000"  // ← Device 2's IP
+    
+    //device 2
+    @State private var targetAddress: String = "10.2.201.216:6000"
     
     // SIP Registration Mode Config
     @State var sipServer = "oraclesbc.hualiteq.com"
     @State private var sipProxy = "oraclesbc.hualiteq.com" // oraclesbc.hualiteq.com or sip:10.2.122.6:5060;transport=tcp
-    @State private var sipUsername = "49992"  // when test real device remember build 2 diff acc
+    @State private var sipUsername = "49992"
+    
+    /* when test real device remember
+     build 2 diff acc
+     jan: 49992
+     hua: 49991 */
     @State private var sipPassword = "12388674"
     @State private var showPassword = false
     

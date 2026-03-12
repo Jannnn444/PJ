@@ -21,9 +21,9 @@ struct SIPPhoneView: View {
     @State private var targetAddress: String = "192.168.1.9:6000"
     
     // SIP Registration Mode Config
-    @State private var sipServer = "oraclesbc.com"
-    @State private var sipProxy = "sip:10.2.122.6:5060;transport=tcp"
-    @State private var sipUsername = "16000"
+    @State var sipServer = "oraclesbc.hualiteq.com"
+    @State private var sipProxy = "oraclesbc.hualiteq.com" // oraclesbc.hualiteq.com or sip:10.2.122.6:5060;transport=tcp
+    @State private var sipUsername = "49991"
     @State private var sipPassword = "12388674"
     @State private var showPassword = false
     
@@ -174,7 +174,6 @@ struct SIPPhoneView: View {
                         }
                     }
                 }
-                
                 Button(action: registerWithSIP) {
                     Text("Register")
                         .frame(maxWidth: .infinity)
@@ -266,7 +265,7 @@ struct SIPPhoneView: View {
                     .buttonStyle(.borderedProminent)
                     .tint(.blue)
                 }
-                
+                                
                 // Hangup
                 if pjsipManager.callState == .calling ||
                    pjsipManager.callState == .connected ||
@@ -356,16 +355,50 @@ struct SIPPhoneView: View {
         stateLabel = "Unregistered"
     }
     
+//    private func makeCall() {
+//        let destination: String
+//        if useDirectMode {
+//            // Use phoneNumber if filled, otherwise use targetAddress
+//            destination = phoneNumber.isEmpty ? targetAddress : phoneNumber
+//        } else {
+//            destination = phoneNumber
+//        }
+//        
+//        guard !destination.isEmpty else { return }
+//        pjsipManager.makeCall(to: destination)
+//    }
+    
     private func makeCall() {
         let destination: String
         if useDirectMode {
-            // Use phoneNumber if filled, otherwise use targetAddress
             destination = phoneNumber.isEmpty ? targetAddress : phoneNumber
         } else {
             destination = phoneNumber
         }
         
         guard !destination.isEmpty else { return }
-        pjsipManager.makeCall(to: destination)
+        
+        // Build proper SIP URI if not already a full URI
+        let sipURI: String
+        if destination.hasPrefix("sip:") {
+            // Already a full SIP URI, use as-is
+            sipURI = destination
+        } else if useDirectMode && destination.contains("@") {
+            // Has domain already, just add sip: prefix
+            sipURI = "sip:\(destination)"
+        } else if useDirectMode {
+            // targetAddress mode — destination might be an IP:port
+            sipURI = "sip:\(destination)"
+        } else {
+            // Phone number only — needs a SIP server domain
+            let sipServer = $pjsipManager.sipServer //"192.168.1.100:5060"
+            sipURI = "sip:\(destination)@\(sipServer)"
+        }
+        
+        pjsipManager.makeCall(to: sipURI)
     }
 }
+
+
+
+

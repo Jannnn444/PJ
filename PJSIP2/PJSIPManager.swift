@@ -8,6 +8,8 @@ class PJSIPManager: ObservableObject {
     // MARK: - Singleton
     static let shared = PJSIPManager()
     
+    var sipServer:String = "192.168.1.100:5060"
+    
     // MARK: - Published Properties
     @Published var isRegistered: Bool = false
     @Published var currentCall: String = ""
@@ -231,6 +233,9 @@ class PJSIPManager: ObservableObject {
     /// Make a direct P2P call - matches Android sample's "sip:IP:PORT" pattern
     /// The Android log shows: "Making call with acc #0 to sip:192.168.1.9:6000"
     public func makeCall(to destination: String, completion: @escaping () -> Void = {}) {
+        
+        print("[PJSIP] Making call to: \(destination)")
+        
         guard isLibraryInitialized, accountId != -1 else {
             fail(.failSystemException, "Library not initialized. Call startLibrary() first.")
             return

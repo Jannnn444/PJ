@@ -23,7 +23,7 @@ struct SIPPhoneView: View {
     // SIP Registration Mode Config
     @State var sipServer = "oraclesbc.hualiteq.com"
     @State private var sipProxy = "oraclesbc.hualiteq.com" // oraclesbc.hualiteq.com or sip:10.2.122.6:5060;transport=tcp
-    @State private var sipUsername = "49991"
+    @State private var sipUsername = "49992"  // when test real device remember build 2 diff acc
     @State private var sipPassword = "12388674"
     @State private var showPassword = false
     
@@ -208,15 +208,68 @@ struct SIPPhoneView: View {
     }
     
     // MARK: - Call Section
-    
+
     private var callSection: some View {
         VStack(spacing: 16) {
             Text("Make Call")
                 .font(.title2)
                 .fontWeight(.bold)
             
+            // ✅ Incoming call banner - prominent, hard to miss
+            if pjsipManager.callState == .incoming {
+                VStack(spacing: 12) {
+                    HStack {
+                        Image(systemName: "phone.fill")
+                            .foregroundColor(.white)
+                            .font(.title2)
+                        VStack(alignment: .leading) {
+                            Text("Incoming Call")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                            Text(pjsipManager.currentCall)
+                                .font(.caption)
+                                .foregroundColor(.white.opacity(0.8))
+                        }
+                        Spacer()
+                    }
+                    .padding()
+                    .background(Color.green)
+                    .cornerRadius(12)
+                    
+                    HStack(spacing: 16) {
+                        // Decline
+                        Button(action: { pjsipManager.hangupCall() }) {
+                            HStack {
+                                Image(systemName: "phone.down.fill")
+                                Text("Decline")
+                            }
+                            .frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .tint(.red)
+                        
+                        // Answer
+                        Button(action: { pjsipManager.answerCall() }) {
+                            HStack {
+                                Image(systemName: "phone.fill")
+                                Text("Answer")
+                            }
+                            .frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .tint(.green)
+                    }
+                }
+                .padding()
+                .background(Color.green.opacity(0.1))
+                .cornerRadius(12)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(Color.green, lineWidth: 2)
+                )
+            }
+
             if useDirectMode {
-                // In P2P mode, show the target address as the call destination
                 Text("Target: sip:\(targetAddress)")
                     .font(.caption)
                     .foregroundColor(.blue)
@@ -227,7 +280,7 @@ struct SIPPhoneView: View {
                 .keyboardType(useDirectMode ? .default : .phonePad)
             
             // Current Call Info
-            if !pjsipManager.currentCall.isEmpty {
+            if !pjsipManager.currentCall.isEmpty && pjsipManager.callState != .incoming {
                 HStack {
                     Circle()
                         .fill(pjsipManager.callState == .connected ? Color.green : Color.orange)
@@ -241,35 +294,22 @@ struct SIPPhoneView: View {
             
             // Call Buttons
             VStack(spacing: 12) {
-                // Make Call
-                Button(action: makeCall) {
-                    HStack {
-                        Image(systemName: "phone.fill")
-                        Text("Call")
-                    }
-                    .frame(maxWidth: .infinity)
-                }
-                .disabled(pjsipManager.callState == .calling || pjsipManager.callState == .connected)
-                .buttonStyle(.borderedProminent)
-                .tint(.green)
-                
-                // Answer (incoming only)
-                if pjsipManager.callState == .incoming {
-                    Button(action: { pjsipManager.answerCall() }) {
+                // Make Call — hidden during incoming
+                if pjsipManager.callState != .incoming {
+                    Button(action: makeCall) {
                         HStack {
                             Image(systemName: "phone.fill")
-                            Text("Answer")
+                            Text("Call")
                         }
                         .frame(maxWidth: .infinity)
                     }
+                    .disabled(pjsipManager.callState == .calling || pjsipManager.callState == .connected)
                     .buttonStyle(.borderedProminent)
-                    .tint(.blue)
+                    .tint(.green)
                 }
-                                
-                // Hangup
-                if pjsipManager.callState == .calling ||
-                   pjsipManager.callState == .connected ||
-                   pjsipManager.callState == .incoming {
+                
+                // Hangup — shown when calling or connected
+                if pjsipManager.callState == .calling || pjsipManager.callState == .connected {
                     Button(action: { pjsipManager.hangupCall() }) {
                         HStack {
                             Image(systemName: "phone.down.fill")

@@ -8,7 +8,12 @@ class PJSIPManager: ObservableObject {
     // MARK: - Singleton
     static let shared = PJSIPManager()
     
-    var sipServer:String = "192.168.1.100:5060"
+    var sipServer:String = "10.2.201.62:5060"
+    
+    // hualiteq iphone = 10.2.201.216:5060
+    // janus iphone = 10.2.201.62:5060
+    
+    // sTIm = 192.168.1.100:5060
     
     // MARK: - Published Properties
     @Published var isRegistered: Bool = false
@@ -292,10 +297,15 @@ class PJSIPManager: ObservableObject {
             self.registerThreadIfNeeded()
             guard self.callId != -1 else { return }
             
+            // ✅ Set null sound device first (same as makeCall)
+            pjsua_set_null_snd_dev()
+            
             let status = pjsua_call_answer(self.callId, 200, nil, nil)
             if status == 0 {
                 DispatchQueue.main.async {
                     self.callState = .connected
+                    self.state = .callConnected
+                    self.observer.call.onCallConnected?()  // ✅ fire observer
                 }
             }
             self.debugPrint("Answer call: \(status == 0 ? "OK" : "Failed(\(status))")")
@@ -539,6 +549,9 @@ class PJSIPManager: ObservableObject {
     
     func handleIncomingCall(accountId: Int32, callId: Int32) {
         self.callId = callId
+        
+        // ✅ Must send 180 Ringing immediately or caller gets no feedback
+        pjsua_call_answer(callId, 180, nil, nil)
         
         DispatchQueue.main.async {
             self.callState = .incoming

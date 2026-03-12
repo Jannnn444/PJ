@@ -254,8 +254,12 @@ class PJSIPManager: ObservableObject {
             
             // Android sets null sound device before calling
             // This avoids audio device conflicts on the emulator/simulator
-            let nullSndStatus = pjsua_set_null_snd_dev()
-            self.debugPrint("Set null sound device: \(nullSndStatus == 0 ? "OK" : "Failed(\(nullSndStatus))")")
+            
+//            let nullSndStatus = pjsua_set_null_snd_dev()
+            
+            
+            
+//            self.debugPrint("Set null sound device: \(nullSndStatus == 0 ? "OK" : "Failed(\(nullSndStatus))")")
             
             // Build SIP URI - match Android format: "sip:192.168.1.9:6000"
             let uri: String
@@ -301,7 +305,7 @@ class PJSIPManager: ObservableObject {
             guard self.callId != -1 else { return }
             
             // ✅ Set null sound device first (same as makeCall)
-            pjsua_set_null_snd_dev()
+//            pjsua_set_null_snd_dev()
             
             let status = pjsua_call_answer(self.callId, 200, nil, nil)
             if status == 0 {

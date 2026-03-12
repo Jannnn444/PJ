@@ -54,6 +54,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1E5DC19D2F62C03A00D9F6BE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		1EDF00012E829AA800C35620 /* PJSIP2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PJSIP2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1EDF00042E829AA800C35620 /* PJSIP2App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PJSIP2App.swift; sourceTree = "<group>"; };
 		1EDF00062E829AA800C35620 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -161,6 +162,7 @@
 		1EDF00032E829AA800C35620 /* PJSIP2 */ = {
 			isa = PBXGroup;
 			children = (
+				1E5DC19D2F62C03A00D9F6BE /* Info.plist */,
 				1EDF00122E829D6400C35620 /* pj */,
 				1EDF00042E829AA800C35620 /* PJSIP2App.swift */,
 				1EDF00062E829AA800C35620 /* ContentView.swift */,
@@ -476,6 +478,7 @@
 					"./pjproject-2.15.1/pjsip/include/",
 					"./pjproject-2.15.1/pjsua-lib/include/",
 				);
+				INFOPLIST_FILE = PJSIP2/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -536,6 +539,7 @@
 					"./pjproject-2.15.1/pjsip/include/",
 					"./pjproject-2.15.1/pjsua-lib/include/",
 				);
+				INFOPLIST_FILE = PJSIP2/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

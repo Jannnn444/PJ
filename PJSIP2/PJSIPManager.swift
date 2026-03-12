@@ -10,16 +10,16 @@ class PJSIPManager: ObservableObject {
     
     // 📍
     // when its 49991
-//    var sipServer: String = "10.2.201.62:6000"  // ← Device1 set: Device 2's IP
+    var sipServer: String = "10.2.201.62:6000"  // ← Device1 set: Device 2's IP
     
     // when its 49992
-    var sipServer: String = "10.2.201.216:5060" // ← Device2 set: Device 1's IP
+//    var sipServer: String = "10.2.201.216:5060" // ← Device2 set: Device 1's IP
     
     
     
     /* 
-     hualiteq iphone = 10.2.201.216:5060
-     janus iphone = 10.2.201.62:5060
+     49991 - hualiteq iphone = 10.2.201.216:5060
+     49992 - janus iphone = 10.2.201.62:5060
      */
     
     // sTIm = 192.168.1.100:5060
@@ -134,7 +134,12 @@ class PJSIPManager: ObservableObject {
                 // Step 4: Add local account (no registration) - matches Android's "sip:localhost"
                 var accConfig = pjsua_acc_config()
                 pjsua_acc_config_default(&accConfig)
-                accConfig.id = self.createPJString(from: "sip:localhost")
+                
+                // 📍 Change to your device's actual IP:
+                let localIP = "10.2.201.216"  // Device 1 49991
+//                let localIP = "10.2.201.62:5060"  // Device 2 49992
+                
+                accConfig.id = self.createPJString(from: "sip:user@\(localIP)")
                 
                 let accStatus = pjsua_acc_add(&accConfig, 1, &self.accountId)
                 guard accStatus == 0 else {

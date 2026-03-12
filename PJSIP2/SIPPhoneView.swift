@@ -21,10 +21,10 @@ struct SIPPhoneView: View {
     
     // 📍
     // when its 49991 uncomment this
-//    @State private var targetAddress: String = "10.2.201.62:6000"  // ← Device 2's IP
+    @State private var targetAddress: String = "10.2.201.62:6000"  // ← Device 2's IP
     
     // when its 49992 ucomment this
-    @State private var targetAddress: String = "10.2.201.216:6000" // ← Device 1's IP
+//    @State private var targetAddress: String = "10.2.201.216:6000" // ← Device 1's IP
     
     // SIP Registration Mode Config
     @State var sipServer = "oraclesbc.hualiteq.com"
@@ -32,7 +32,7 @@ struct SIPPhoneView: View {
     
     // 📍
     // when 49991 / 49992 change username
-    @State private var sipUsername = "49992"
+    @State private var sipUsername = "49991"
     
     /* when test real device remember
      build 2 diff acc

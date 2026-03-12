@@ -8,13 +8,19 @@ class PJSIPManager: ObservableObject {
     // MARK: - Singleton
     static let shared = PJSIPManager()
     
+    // 📍
     // when its 49991
 //    var sipServer: String = "10.2.201.62:6000"  // ← Device1 set: Device 2's IP
     
     // when its 49992
     var sipServer: String = "10.2.201.216:5060" // ← Device2 set: Device 1's IP
-    // hualiteq iphone = 10.2.201.216:5060
-    // janus iphone = 10.2.201.62:5060
+    
+    
+    
+    /* 
+     hualiteq iphone = 10.2.201.216:5060
+     janus iphone = 10.2.201.62:5060
+     */
     
     // sTIm = 192.168.1.100:5060
     
@@ -240,61 +246,103 @@ class PJSIPManager: ObservableObject {
     
     /// Make a direct P2P call - matches Android sample's "sip:IP:PORT" pattern
     /// The Android log shows: "Making call with acc #0 to sip:192.168.1.9:6000"
-    public func makeCall(to destination: String, completion: @escaping () -> Void = {}) {
-        
-        print("[PJSIP] Making call to: \(destination)")
-        
-        guard isLibraryInitialized, accountId != -1 else {
-            fail(.failSystemException, "Library not initialized. Call startLibrary() first.")
-            return
+    ///
+//    public func makeCall(to destination: String, completion: @escaping () -> Void = {}) {
+//        
+//        print("[PJSIP] Making call to: \(destination)")
+//        
+//        guard isLibraryInitialized, accountId != -1 else {
+//            fail(.failSystemException, "Library not initialized. Call startLibrary() first.")
+//            return
+//        }
+//        
+//        pjsipQueue.async {
+//            self.registerThreadIfNeeded()
+//            
+//            // Android sets null sound device before calling
+//            // This avoids audio device conflicts on the emulator/simulator
+//            
+////            let nullSndStatus = pjsua_set_null_snd_dev()
+//            
+//            
+//            
+////            self.debugPrint("Set null sound device: \(nullSndStatus == 0 ? "OK" : "Failed(\(nullSndStatus))")")
+//            
+//            // Build SIP URI - match Android format: "sip:192.168.1.9:6000"
+//            let uri: String
+//            if destination.hasPrefix("sip:") {
+//                uri = destination
+//            } else {
+//                uri = "sip:\(destination)"
+//            }
+//            
+//            var uriStr = self.createPJString(from: uri)
+//            
+//            self.debugPrint("Making call to: \(uri)")
+//            
+//            let status = pjsua_call_make_call(
+//                self.accountId,
+//                &uriStr,
+//                nil,    // call_setting (use defaults)
+//                nil,    // user_data
+//                nil,    // msg_data
+//                &self.callId
+//            )
+//            
+//            if status == 0 {
+//                self.debugPrint("Call initiated (ID: \(self.callId))")
+//                DispatchQueue.main.async {
+//                    self.currentCall = destination
+//                    self.callState = .calling
+//                    self.state = .makingCall
+//                    completion()
+//                }
+//            } else {
+//                self.debugPrint("Call failed with status: \(status)")
+//                DispatchQueue.main.async {
+//                    self.fail(.failSystemException, "Call failed (status: \(status))")
+//                }
+//            }
+//        }
+//    }
+    
+    public func makeCall(to destination: String) {
+        // Build full URI if not already complete
+        let fullURI: String
+        if destination.hasPrefix("sip:") {
+            fullURI = destination
+        } else {
+            fullURI = "sip:\(destination)"  // caller must pass full URI
         }
         
+        debugPrint("Making call to: \(fullURI)")
+        
         pjsipQueue.async {
-            self.registerThreadIfNeeded()
+            self.registerThreadIfNeeded()  // ← MUST be first thing on this queue
             
-            // Android sets null sound device before calling
-            // This avoids audio device conflicts on the emulator/simulator
-            
-//            let nullSndStatus = pjsua_set_null_snd_dev()
-            
-            
-            
-//            self.debugPrint("Set null sound device: \(nullSndStatus == 0 ? "OK" : "Failed(\(nullSndStatus))")")
-            
-            // Build SIP URI - match Android format: "sip:192.168.1.9:6000"
-            let uri: String
-            if destination.hasPrefix("sip:") {
-                uri = destination
-            } else {
-                uri = "sip:\(destination)"
+            guard pjsua_get_state() == PJSUA_STATE_RUNNING else {
+                print("[PJSIP] Not running, cannot make call")
+                return
             }
             
-            var uriStr = self.createPJString(from: uri)
+            // ✅ Convert String to pj_str_t safely within the same scope
+            let status = fullURI.withCString { cStr in
+                var uriStr = pj_str(UnsafeMutablePointer(mutating: cStr))
+                var callSetting = pjsua_call_setting()
+                pjsua_call_setting_default(&callSetting)
+                
+                return pjsua_call_make_call(
+                    self.accountId,
+                    &uriStr,
+                    &callSetting,
+                    nil,
+                    nil,
+                    &self.callId
+                )
+            }
             
-            self.debugPrint("Making call to: \(uri)")
-            
-            let status = pjsua_call_make_call(
-                self.accountId,
-                &uriStr,
-                nil,    // call_setting (use defaults)
-                nil,    // user_data
-                nil,    // msg_data
-                &self.callId
-            )
-            
-            if status == 0 {
-                self.debugPrint("Call initiated (ID: \(self.callId))")
-                DispatchQueue.main.async {
-                    self.currentCall = destination
-                    self.callState = .calling
-                    self.state = .makingCall
-                    completion()
-                }
-            } else {
-                self.debugPrint("Call failed with status: \(status)")
-                DispatchQueue.main.async {
-                    self.fail(.failSystemException, "Call failed (status: \(status))")
-                }
+            if status != PJ_SUCCESS.rawValue {
+                print("[PJSIP] Call failed with status: \(status)")
             }
         }
     }

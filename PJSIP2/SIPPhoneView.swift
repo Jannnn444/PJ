@@ -19,16 +19,18 @@ struct SIPPhoneView: View {
     // P2P Direct Mode Config (matches Android sample)
     @State private var localPort: String = "6000"
     
-    // when its 49991
+    // 📍
+    // when its 49991 uncomment this
 //    @State private var targetAddress: String = "10.2.201.62:6000"  // ← Device 2's IP
     
-    // when its 49992
-    @State private var targetAddress: String = "10.2.201.216:6000"
+    // when its 49992 ucomment this
+    @State private var targetAddress: String = "10.2.201.216:6000" // ← Device 1's IP
     
     // SIP Registration Mode Config
     @State var sipServer = "oraclesbc.hualiteq.com"
     @State private var sipProxy = "oraclesbc.hualiteq.com" // oraclesbc.hualiteq.com or sip:10.2.122.6:5060;transport=tcp
     
+    // 📍
     // when 49991 / 49992 change username
     @State private var sipUsername = "49992"
     
@@ -430,25 +432,24 @@ struct SIPPhoneView: View {
         
         guard !destination.isEmpty else { return }
         
-        // Build proper SIP URI if not already a full URI
         let sipURI: String
         if destination.hasPrefix("sip:") {
-            // Already a full SIP URI, use as-is
             sipURI = destination
         } else if useDirectMode && destination.contains("@") {
-            // Has domain already, just add sip: prefix
             sipURI = "sip:\(destination)"
         } else if useDirectMode {
-            // targetAddress mode — destination might be an IP:port
-            sipURI = "sip:\(destination)"
+            // ✅ destination is either IP:port or just a number
+            // Always route to targetAddress in direct mode
+            let host = targetAddress  // "10.2.201.216:6000"
+            let user = destination.contains(".") ? destination : destination  // it's a number like 49991
+            sipURI = "sip:\(user)@\(host)"
         } else {
-            // Phone number only — needs a SIP server domain
-            let sipServer = pjsipManager.sipServer //"192.168.1.100:5060"
+            let sipServer = pjsipManager.sipServer
             sipURI = "sip:\(destination)@\(sipServer)"
-//            pjsipManager.makeCall(to: sipURI)
         }
         
-        pjsipManager.makeCall(to: sipURI)  // ✅ always called
+        pjsipManager.makeCall(to: sipURI)
+    
     }
 }
 

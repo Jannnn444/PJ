@@ -1,3 +1,10 @@
+//
+//  PJSIPManager.swift
+//  PJSIP2
+//
+//  Created by Hualiteq International on 2025/9/24.
+//
+
 import Foundation
 import AVFoundation
 
@@ -13,9 +20,7 @@ class PJSIPManager: ObservableObject {
     var sipServer: String = "10.2.201.62:6000"  // ← Device1 set: Device 2's IP
     
     // when its 49992
-//    var sipServer: String = "10.2.201.216:5060" // ← Device2 set: Device 1's IP
-    
-    
+//    var sipServer: String = "10.2.201.216:5060" //  ← Device2 set: Device 1's IP
     
     /* 
      49991 - hualiteq iphone = 10.2.201.216:5060
@@ -573,6 +578,23 @@ class PJSIPManager: ObservableObject {
         
         let stateValue = callInfo.state
         debugPrint("Call \(callId) state: \(stateValue.rawValue)")
+        
+        // ✅ Connect audio conference ports while still on PJSIP thread
+           if stateValue == PJSIP_INV_STATE_CONFIRMED {
+               for i in 0..<Int(callInfo.media_cnt) {
+                   let media = withUnsafeBytes(of: callInfo.media) { ptr in
+                       ptr.load(fromByteOffset: i * MemoryLayout<pjsua_call_media_info>.stride,
+                                as: pjsua_call_media_info.self)
+                   }
+                   if media.type == PJMEDIA_TYPE_AUDIO && media.status == PJSUA_CALL_MEDIA_ACTIVE {
+                       let confSlot = media.stream.aud.conf_slot
+                       pjsua_conf_connect(0, confSlot)        // mic → call
+                       pjsua_conf_connect(confSlot, 0)        // call → speaker
+                       debugPrint("Audio connected on conf slot \(confSlot)")
+                   }
+               }
+           }
+           
         
         DispatchQueue.main.async {
             switch stateValue {

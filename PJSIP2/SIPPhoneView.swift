@@ -8,8 +8,9 @@
 import SwiftUI
 import Combine
 
+
 struct SIPPhoneView: View {
-    @StateObject private var pjsipManager = PJSIPManager.shared
+    @ObservedObject private var pjsipManager = PJSIPManager.shared
     @State private var phoneNumber = ""
     @State private var stateLabel = "Library not started"
     
@@ -20,17 +21,19 @@ struct SIPPhoneView: View {
     @State private var localPort: String = "6000"
     
     // 📍
-    // when its 49991 uncomment this
+    
+    // when its 49991 use this
     @State private var targetAddress: String = "10.2.201.62:6000"  // ← Device 2's IP
     
-    // when its 49992 ucomment this
-//    @State private var targetAddress: String = "10.2.201.216:6000" // ← Device 1's IP
+    // when its 49992 use this
+    //@State private var targetAddress: String = "10.2.201.216:6000" // ← Device 1's IP
     
     // SIP Registration Mode Config
     @State var sipServer = "oraclesbc.hualiteq.com"
     @State private var sipProxy = "oraclesbc.hualiteq.com" // oraclesbc.hualiteq.com or sip:10.2.122.6:5060;transport=tcp
     
     // 📍
+    
     // when 49991 / 49992 change username
     @State private var sipUsername = "49991"
     
